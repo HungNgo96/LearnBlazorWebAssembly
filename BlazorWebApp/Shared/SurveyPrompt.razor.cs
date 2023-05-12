@@ -13,5 +13,8 @@ namespace BlazorWebApp.Shared
 
         [CascadingParameter(Name = "CasName")]
         public string CascadingValueDemo { get; set; }
+
+        [Parameter]
+        public RenderFragment ChildContent { get; set; }
     }
 }

@@ -1,0 +1,18 @@
+﻿@page "/demo"
+<PageTitle>Learning</PageTitle>
+<h1>Demo</h1>
+<div>Learning</div>
+<Learning Title="Learning" CurrentCount="currentCount">
+    <LeaningChildContent>
+        <h3>Leaning child Content</h3>
+    </LeaningChildContent>
+</Learning>
+
+<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+@code {
+    private int currentCount = 0;
+    private void IncrementCount()
+    {
+        currentCount++;
+    }
+}

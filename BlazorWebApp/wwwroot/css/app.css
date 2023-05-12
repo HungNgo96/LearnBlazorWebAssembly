@@ -99,3 +99,10 @@ a, .btn-link {
     .loading-progress-text:after {
         content: var(--blazor-load-percentage-text, "Loading");
     }
+
+
+    h1 {
+    color: red;
+    font-style: italic;
+    text-shadow: 2px 2px 2px gray;
+}
