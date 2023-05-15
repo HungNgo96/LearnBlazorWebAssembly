@@ -13,7 +13,7 @@ builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.
 builder.Services.AddScoped(typeof(Lazy<>), typeof(LazyInstanceUtils<>));
 
 IConfiguration config = builder.Configuration;
-Console.WriteLine("config::" + JsonConvert.SerializeObject(config));
+//Console.WriteLine("config::" + JsonConvert.SerializeObject(config));
 
 //add httpClient
 builder.Services.AddHttpClient();

@@ -15,7 +15,7 @@ namespace Infrastructure.DbContexts.IEntityTypeConfiguration
         {
             _ = builder.ToTable("Product", schema: "BlazorWebAssemly");
             _ = builder.HasKey(t => t.Id);
-            _ = builder.Property(t => t.Id).HasColumnName("Id");
+            _ = builder.Property(t => t.Id).HasColumnName("Id").HasDefaultValue();
             _ = builder.Property(t => t.Name).HasColumnName("Name");
             _ = builder.Property(t => t.Supplier).HasColumnName("Supplier");
             _ = builder.Property(t => t.Price).HasColumnName("Price");

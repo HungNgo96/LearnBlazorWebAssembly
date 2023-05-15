@@ -1,6 +1,8 @@
 ﻿using ApplicationClient.Interfaces;
 using ApplicationClient.Ultilities;
 using Microsoft.Extensions.DependencyInjection;
+using Shared.Helper;
+using Shared.Model.Http;
 using Shared.Responses;
 using Shared.Wrapper;
 using System.Collections;
@@ -22,15 +24,18 @@ namespace ApplicationClient.Services
         {
            var http =  _httpClientFactory.CreateClient("ProductsAPI");
 
-            var response = await http.GetAsync("api/Products/Get");
-            var content = await response.Content.ReadAsStreamAsync();
+            (var result, var errorModel) = await CallApi<string, BaseResponse<List<ProductResponse>>>.GetAsJsonAsync(null, http.BaseAddress.ToString(), "api/Products/Get", new() {Client = http }, default);
 
-            if (!response.IsSuccessStatusCode)
+            if (!errorModel.Succeeded)
             {
-                return await Result<IEnumerable<ProductResponse>>.FailAsync(message: response.RequestMessage.ToString());
+                return await Result<IEnumerable<ProductResponse>>.FailAsync(message: errorModel.Message ?? string.Empty);
             }
-            var resultStream = await JsonSerializer.DeserializeAsync<Result<List<ProductResponse>>>(content, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-            return await Result<IEnumerable<ProductResponse>>.SuccessAsync(data: resultStream.Data);
+
+            if (!result.Succeeded)
+            {
+                return await Result<IEnumerable<ProductResponse>>.FailAsync(messages: result.Messages ?? new List<string>());
+            }
+            return await Result<IEnumerable<ProductResponse>>.SuccessAsync(data: result.Data);
         }
     }
 }
