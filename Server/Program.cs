@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+using ApplicationClient.Ultilities;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -6,7 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
-
+builder.Services.AddScoped(typeof(Lazy<>), typeof(LazyInstanceUtils<>));
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

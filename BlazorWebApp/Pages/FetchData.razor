@@ -1,5 +1,7 @@
 ﻿@page "/ll/fetchdata"
 @inject HttpClient Http
+@using ApplicationClient.Interfaces
+@using Newtonsoft.Json;
 
 <PageTitle>Weather forecast</PageTitle>
 
@@ -38,13 +40,19 @@ else
 
 @code {
     private WeatherForecast[]? forecasts;
-    [Inject]
-    private IHttpClientFactory _ihttpClientFactory { get; set; }
+
+    [Inject] private IHttpClientFactory _ihttpClientFactory { get; set; }
+    [Inject] private IProductService _productService { get; set; }
     protected override async Task OnInitializedAsync()
     {
         var http = _ihttpClientFactory.CreateClient("ProductsAPI");
         //forecasts = await Http.GetFromJsonAsync<WeatherForecast[]>("sample-data/weather.json");
         forecasts = await http.GetFromJsonAsync<WeatherForecast[]>("WeatherForecast/Get");
+
+        var result = await _productService.GetProductsAsync();
+
+        Console.WriteLine("result::" + JsonConvert.SerializeObject(result));
+
     }
 
     public class WeatherForecast
