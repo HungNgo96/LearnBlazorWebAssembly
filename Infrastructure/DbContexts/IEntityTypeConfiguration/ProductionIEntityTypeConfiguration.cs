@@ -9,11 +9,11 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.DbContexts.IEntityTypeConfiguration
 {
-    public class ProductionIEntityTypeConfiguration : IEntityTypeConfiguration<Production>
+    public class ProductionIEntityTypeConfiguration : IEntityTypeConfiguration<Product>
     {
-        public void Configure(EntityTypeBuilder<Production> builder)
+        public void Configure(EntityTypeBuilder<Product> builder)
         {
-            _ = builder.ToTable("Production", schema: "BlazorWebAssemly");
+            _ = builder.ToTable("Product", schema: "BlazorWebAssemly");
             _ = builder.HasKey(t => t.Id);
             _ = builder.Property(t => t.Id).HasColumnName("Id");
             _ = builder.Property(t => t.Name).HasColumnName("Name");

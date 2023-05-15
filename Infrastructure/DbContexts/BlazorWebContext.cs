@@ -9,7 +9,7 @@ namespace Infrastructure.DbContexts
         public BlazorWebContext(DbContextOptions<BlazorWebContext> options)
          : base(options) { }
 
-        public DbSet<Production> Productions { get; set; }
+        public DbSet<Product> Products { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

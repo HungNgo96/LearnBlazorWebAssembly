@@ -1,8 +1,12 @@
+using Application.Interfaces.Repositories;
+using Application.Interfaces.Services;
 using Application.Options;
+using Application.Ultilities;
 using Infrastructure.DbContexts;
+using Infrastructure.Repositories;
+using Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
-using Microsoft.Extensions.DependencyInjection;
+using Application.Extensions;
 
 IConfiguration config = new ConfigurationBuilder()
     .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
@@ -13,16 +17,29 @@ IConfiguration config = new ConfigurationBuilder()
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllers();
+var services = builder.Services;
+services.AddCors(policy =>
+{
+    policy.AddPolicy("CorsPolicy", opt => opt
+        .AllowAnyOrigin()
+        .AllowAnyHeader()
+        .AllowAnyMethod());
+});
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+services.AddEndpointsApiExplorer();
+services.AddSwaggerGen();
 _ = builder.Services.Configure<ConnectionStringOptions>(builder.Configuration.GetRequiredSection("ConnectionStrings"));
+services.AddControllers();
 
-builder.Services.AddDbContext<BlazorWebContext>(op =>
+services.AddDbContext<BlazorWebContext>(op =>
 {
     op.UseSqlServer(config.GetRequiredSection("ConnectionStrings:SqlServer").Value, x => x.MigrationsAssembly("Infrastructure"));
 });
+services.AddApplicationLayer();
+services.AddScoped(typeof(Lazy<>), typeof(LazyInstanceUtils<>));
+services.AddScoped<IProductRepository, ProductRepository>();
+services.AddScoped<IProductService, ProductService>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -32,8 +49,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
-
+//app.UseHttpsRedirection();
+app.UseCors("CorsPolicy");
 app.UseAuthorization();
 
 app.MapControllers();
