@@ -1,0 +1,23 @@
+﻿@page "/ll/products"
+@using BlazorWebApp.Components
+
+<PageTitle>Product</PageTitle>
+
+<div class="row">
+    <div class="col-md-10">
+        @*Place for search and sort*@
+    </div>
+    <div class="col-md-2">
+        <a href="/ll/createProduct">Create Product</a>
+    </div>
+</div>
+<div class="row">
+    <div class="col">
+        <ProductTable Products="ProductList" />
+    </div>
+</div>
+<div class="row">
+    <div class="col">
+        @*Place for pagination*@
+    </div>
+</div>

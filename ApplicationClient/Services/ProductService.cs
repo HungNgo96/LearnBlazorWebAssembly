@@ -1,13 +1,8 @@
 ﻿using ApplicationClient.Interfaces;
-using ApplicationClient.Ultilities;
-using Microsoft.Extensions.DependencyInjection;
 using Shared.Helper;
 using Shared.Model.Http;
 using Shared.Responses;
 using Shared.Wrapper;
-using System.Collections;
-using System.Net.Http;
-using System.Text.Json;
 
 namespace ApplicationClient.Services
 {
@@ -24,7 +19,7 @@ namespace ApplicationClient.Services
         {
            var http =  _httpClientFactory.CreateClient("ProductsAPI");
 
-            (var result, var errorModel) = await CallApi<string, BaseResponse<List<ProductResponse>>>.GetAsJsonAsync(null, http.BaseAddress.ToString(), "api/Products/Get", new() {Client = http }, default);
+            (var result, var errorModel) = await CallApi<string, BaseResponse<List<ProductResponse>>>.GetAsJsonAsync(null!, http.BaseAddress.ToString(), "api/Products/Get", new() { Client = http }, default);
 
             if (!errorModel.Succeeded)
             {
