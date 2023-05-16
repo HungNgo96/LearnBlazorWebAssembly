@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Domain.Entity;
-using Shared.Responses;
+using Shared.Responses.Products;
 
 namespace FTI.PartnerMiddle.Application.Mapping.Deploys
 {

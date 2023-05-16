@@ -1,5 +1,4 @@
-﻿using Domain.Entity;
-using Shared.Responses;
+﻿using Shared.Responses.Products;
 using Shared.Wrapper;
 
 namespace Application.Interfaces.Services

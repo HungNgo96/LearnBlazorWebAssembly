@@ -11,5 +11,10 @@ namespace BlazorWebApp.Pages
         {
             NavigationManager.NavigateTo("/ll");
         }
+
+        protected override void OnInitialized()
+        {
+            NavigationManager.NavigateTo("/ll");
+        }
     }
 }

@@ -1,7 +1,8 @@
 ﻿using ApplicationClient.Interfaces;
+using ApplicationClient.Responses;
 using Shared.Helper;
 using Shared.Model.Http;
-using Shared.Responses;
+using ApplicationClient.Responses;
 using Shared.Wrapper;
 
 namespace ApplicationClient.Services

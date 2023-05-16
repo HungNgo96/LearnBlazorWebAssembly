@@ -1,4 +1,4 @@
-﻿using Shared.Responses;
+﻿using ApplicationClient.Responses;
 using Shared.Wrapper;
 
 namespace ApplicationClient.Interfaces

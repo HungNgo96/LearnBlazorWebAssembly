@@ -1,4 +1,4 @@
-﻿namespace Shared.Responses
+﻿namespace Shared.Responses.Products
 {
     public class ProductResponse
     {

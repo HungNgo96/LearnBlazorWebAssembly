@@ -5,7 +5,7 @@ using AutoMapper;
 using Domain.Entity;
 using Microsoft.Extensions.Logging;
 using Shared.Extensions;
-using Shared.Responses;
+using Shared.Responses.Products;
 using Shared.Wrapper;
 
 namespace Infrastructure.Services

@@ -1,11 +1,10 @@
 ﻿using Microsoft.AspNetCore.Components;
-using Shared.Responses;
+using ApplicationClient.Responses;
 
-namespace BlazorWebApp.Components
+namespace BlazorWebApp.Components;
+
+public partial class ProductTable
 {
-    public partial class ProductTable
-    {
-        [Parameter]
-        public List<ProductResponse> Products { get; set; }
-    }
+    [Parameter]
+    public List<ProductResponse> Products { get; set; }
 }
