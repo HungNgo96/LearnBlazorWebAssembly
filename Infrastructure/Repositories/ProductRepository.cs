@@ -17,6 +17,12 @@ namespace Infrastructure.Repositories
             _context = context;
         }
 
+        public async Task<bool> CreateProductAsync(Product product, CancellationToken cancellationToken)
+        {
+            _ = _context.AddAsync(product, cancellationToken);
+            return await _context.SaveChangesAsync(cancellationToken) > 0 ;
+        }
+
         public async Task<IEnumerable<Product>> GetProducts() => await _context.Products.ToListAsync();
 
         public async Task<IList<Product>> GetProductsAsync(ProductRequest request, CancellationToken cancellationToken)

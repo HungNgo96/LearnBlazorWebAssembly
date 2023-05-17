@@ -25,6 +25,19 @@ namespace Infrastructure.Services
             _mapper = new LazyInstanceUtils<IMapper>(serviceProvider);
         }
 
+        public async Task<IResult<bool>> CreateProductAsync(CreateProductRequest request, CancellationToken cancellationToken)
+        {
+            _logger.Request(nameof(ProductService), nameof(CreateProductAsync), requestName: nameof(CreateProductRequest), JsonConvert.SerializeObject(request));
+
+            var result = await _productRepository.Value.CreateProductAsync(_mapper.Value.Map<Product>(request), cancellationToken);
+
+            _logger.Response(nameof(ProductService), nameof(CreateProductAsync));
+
+            return result
+                ? await Result<bool>.SuccessAsync(data: result, message: "Tạo thành công.")
+                : await Result<bool>.FailAsync(message: "Tạo thất bại.");
+        }
+
         public async Task<IResult<IEnumerable<ProductResponse>>> GetProducts()
         {
             _logger.Request(nameof(ProductService), nameof(GetProducts));
@@ -40,13 +53,13 @@ namespace Infrastructure.Services
 
         public async Task<IResult<PagedList<ProductResponse>>> GetProductsAsync(ProductRequest request, CancellationToken cancellationToken)
         {
-            _logger.Request(nameof(ProductService), nameof(GetProducts), requestName: nameof(ProductRequest), JsonConvert.SerializeObject(request));
+            _logger.Request(nameof(ProductService), nameof(GetProductsAsync), requestName: nameof(ProductRequest), JsonConvert.SerializeObject(request));
 
             var products = await _productRepository.Value.GetProductsAsync(request, cancellationToken);
 
-            _logger.Response(nameof(ProductService), nameof(GetProducts));
+            _logger.Response(nameof(ProductService), nameof(GetProductsAsync));
             var productRes = _mapper.Value.Map<List<ProductResponse>>(products);
-           
+
             return products != null
                 ? await Result<PagedList<ProductResponse>>.SuccessAsync(data: PagedList<ProductResponse>.ToPagedList(productRes, request.PageNumber, request.PageSize), message: " Thành công.")
                 : await Result<PagedList<ProductResponse>>.FailAsync(message: " Thất bại.");

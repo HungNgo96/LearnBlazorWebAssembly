@@ -137,7 +137,7 @@ namespace Shared.Helper
 
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-                string json = JsonConvert.SerializeObject(value, Formatting.Indented);
+                string json = System.Text.Json.JsonSerializer.Serialize(value);
                 StringContent httpContent = new(json, Encoding.UTF8, "application/json");
 
                 HttpResponseMessage httpResponseMessage = await client.PostAsync(path, httpContent, cancellationToken);
@@ -221,7 +221,7 @@ namespace Shared.Helper
                     client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(option.AuthType, option.Token);
                 }
 
-                string json = JsonConvert.SerializeObject(value, Formatting.Indented);
+                string json = System.Text.Json.JsonSerializer.Serialize(value);
                 StringContent httpContent = new(json, Encoding.UTF8, "application/json");
                 HttpResponseMessage httpResponseMessage = await client.PutAsync(path, httpContent, cancellationToken);
                 ///wrire error to error model

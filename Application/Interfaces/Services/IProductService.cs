@@ -9,5 +9,7 @@ namespace Application.Interfaces.Services
     {
         Task<IResult<IEnumerable<ProductResponse>>> GetProducts();
         Task<IResult<PagedList<ProductResponse>>> GetProductsAsync(ProductRequest request, CancellationToken cancellationToken);
+
+        Task<IResult<bool>> CreateProductAsync(CreateProductRequest request, CancellationToken cancellationToken);
     }
 }

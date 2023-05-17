@@ -8,5 +8,6 @@ namespace Application.Interfaces.Repositories
     {
         Task<IEnumerable<Product>> GetProducts();
         Task<IList<Product>> GetProductsAsync(ProductRequest request, CancellationToken cancellationToken);
+        Task<bool> CreateProductAsync(Product product, CancellationToken cancellationToken);
     }
 }
