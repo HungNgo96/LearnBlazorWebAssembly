@@ -1,12 +1,10 @@
 ﻿using Application.Interfaces.Repositories;
 using Domain.Entity;
 using Infrastructure.DbContexts;
+using Infrastructure.Extensions;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Shared.Requests;
+using Shared.Wrapper;
 
 namespace Infrastructure.Repositories
 {
@@ -20,5 +18,15 @@ namespace Infrastructure.Repositories
         }
 
         public async Task<IEnumerable<Product>> GetProducts() => await _context.Products.ToListAsync();
+
+        public async Task<IList<Product>> GetProductsAsync(ProductRequest request, CancellationToken cancellationToken)
+        {
+            var products = await _context.Products
+                .Search(request.SearchTerm!)
+                .Sort(request.OrderBy)
+                .ToListAsync(cancellationToken);
+
+            return products;
+        }
     }
 }

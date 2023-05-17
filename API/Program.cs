@@ -23,7 +23,8 @@ services.AddCors(policy =>
     policy.AddPolicy("CorsPolicy", opt => opt
         .AllowAnyOrigin()
         .AllowAnyHeader()
-        .AllowAnyMethod());
+        .AllowAnyMethod()
+        .WithExposedHeaders("X-Pagination"));
 });
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 services.AddEndpointsApiExplorer();

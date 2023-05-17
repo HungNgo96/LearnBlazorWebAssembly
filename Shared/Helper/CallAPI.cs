@@ -23,7 +23,7 @@ namespace Shared.Helper
             {
                 var client = option.Client;
 
-                if (string.IsNullOrEmpty(uri))
+                if (!string.IsNullOrEmpty(uri))
                 {
                     client.BaseAddress = new Uri(uri);
                 }
@@ -61,6 +61,51 @@ namespace Shared.Helper
             }
         }
 
+        public static async Task<(R?, ErrorModel, HttpResponseHeaders?)> GetAsJsonAndHeaderAsync(T value, string uri, string path, HttpOption option, CancellationToken cancellationToken)
+        {
+            ErrorModel errorModel = new();
+            try
+            {
+                var client = option.Client;
+
+                if (!string.IsNullOrEmpty(uri))
+                {
+                    client.BaseAddress = new Uri(uri);
+                }
+
+                client.Timeout = TimeSpan.FromMinutes(option.Timeout);
+
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                if (!string.IsNullOrEmpty(option.Token))
+                {
+                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(option.AuthType, option.Token);
+                }
+
+                string urlQueryString = value == null ? path : string.Format("{0}?{1}", path, ParseModelToQueryString(value));
+                ///var contractJson = JsonConvert.SerializeObject(contract);
+                HttpResponseMessage httpResponseMessage = await client.GetAsync(urlQueryString, cancellationToken);
+
+                ///wrire error to error model
+                errorModel.StatusCode = (int)httpResponseMessage.StatusCode;
+                errorModel.Message = httpResponseMessage.ReasonPhrase;
+                errorModel.Succeeded = httpResponseMessage.IsSuccessStatusCode;
+                /// throws an exception if errors when posting
+
+                string mediaType = httpResponseMessage.Content.Headers.ContentType?.MediaType ?? string.Empty;
+
+                Task<R> response = mediaType.Contains("text/html")
+                      ? httpResponseMessage.Content.ReadRawContentAsync<R>()
+                      : httpResponseMessage.Content.ReadAsStreamAsync<R>();
+                return (await response, errorModel, httpResponseMessage.Headers);
+            }
+            catch (Exception ex)
+            {
+                errorModel.Message = ex.Message;
+                return (null, errorModel, null!);
+            }
+        }
+
         /// <summary>
         /// fetch data to a specific address
         /// </summary>
@@ -78,7 +123,7 @@ namespace Shared.Helper
             {
                 var client = option.Client;
 
-                if (string.IsNullOrEmpty(uri))
+                if (!string.IsNullOrEmpty(uri))
                 {
                     client.BaseAddress = new Uri(uri);
                 }
@@ -122,7 +167,7 @@ namespace Shared.Helper
             {
                 var client = option.Client;
 
-                if (string.IsNullOrEmpty(uri))
+                if (!string.IsNullOrEmpty(uri))
                 {
                     client.BaseAddress = new Uri(uri);
                 }
@@ -162,7 +207,7 @@ namespace Shared.Helper
             {
                 var client = option.Client;
 
-                if (string.IsNullOrEmpty(uri))
+                if (!string.IsNullOrEmpty(uri))
                 {
                     client.BaseAddress = new Uri(uri);
                 }
@@ -205,7 +250,7 @@ namespace Shared.Helper
             {
                 var client = option.Client;
 
-                if (string.IsNullOrEmpty(uri))
+                if (!string.IsNullOrEmpty(uri))
                 {
                     client.BaseAddress = new Uri(uri);
                 }

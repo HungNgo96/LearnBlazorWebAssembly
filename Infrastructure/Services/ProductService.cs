@@ -4,7 +4,9 @@ using Application.Ultilities;
 using AutoMapper;
 using Domain.Entity;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using Shared.Extensions;
+using Shared.Requests;
 using Shared.Responses.Products;
 using Shared.Wrapper;
 
@@ -34,6 +36,20 @@ namespace Infrastructure.Services
             return products != null
                 ? await Result<IEnumerable<ProductResponse>>.SuccessAsync(data: _mapper.Value.Map<IEnumerable<ProductResponse>>(products), message: " Thành công.")
                 : await Result<IEnumerable<ProductResponse>>.FailAsync(message: " Thất bại.");
+        }
+
+        public async Task<IResult<PagedList<ProductResponse>>> GetProductsAsync(ProductRequest request, CancellationToken cancellationToken)
+        {
+            _logger.Request(nameof(ProductService), nameof(GetProducts), requestName: nameof(ProductRequest), JsonConvert.SerializeObject(request));
+
+            var products = await _productRepository.Value.GetProductsAsync(request, cancellationToken);
+
+            _logger.Response(nameof(ProductService), nameof(GetProducts));
+            var productRes = _mapper.Value.Map<List<ProductResponse>>(products);
+           
+            return products != null
+                ? await Result<PagedList<ProductResponse>>.SuccessAsync(data: PagedList<ProductResponse>.ToPagedList(productRes, request.PageNumber, request.PageSize), message: " Thành công.")
+                : await Result<PagedList<ProductResponse>>.FailAsync(message: " Thất bại.");
         }
     }
 }
