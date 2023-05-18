@@ -25,12 +25,12 @@
             </NavLink>
         </div>
         <div class="nav-item px-3">
-            <NavLink class="nav-link" href="ll/fetchdata">
+            <NavLink class="nav-link" href="ll/fetchdata" @onclick='() => HandleClick("ll/fetchdata")'>
                 <span class="oi oi-list-rich" aria-hidden="true"></span> Fetch data
             </NavLink>
         </div>
         <div class="nav-item px-3">
-            <NavLink class="nav-link" href="ll/products">
+            <NavLink class="nav-link" href="ll/products" @onclick='() => HandleClick("ll/products")'>
                 <span class="oi oi-list-rich" aria-hidden="true"></span> Products
             </NavLink>
         </div>
@@ -45,11 +45,17 @@
 
 @code {
     private bool collapseNavMenu = true;
-
+    private string url{ get; set; }
     private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
 
     private void ToggleNavMenu()
     {
         collapseNavMenu = !collapseNavMenu;
     }
+    @inject NavigationManager NavigationManager;
+
+    private void HandleClick(string url) =>
+        //var href = e;
+        //e.
+        NavigationManager.NavigateTo(url, false);
 }

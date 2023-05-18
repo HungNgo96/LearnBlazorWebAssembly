@@ -15,6 +15,8 @@ public partial class ProductTable
     [Inject]
     public IJSRuntime Js { get; set; }
 
+    [Parameter]
+    public bool IsErrorTable { get; set; }
 
     private void RedirectToUpdate(Guid id)
     {

@@ -15,10 +15,10 @@ public sealed partial class Products : IDisposable
     public MetaData MetaData { get; set; } = new MetaData();
 
     [Inject]
-    public IProductService ProductService { get; set; }
+    private IProductService ProductService { get; set; }
     [Inject]
     public ILogger<Products> Logger { get; set; }
-
+    private bool IsError = false;
     private ProductRequest _productRequest = new ProductRequest();
     private CancellationTokenSource _cts = new();
     public void Dispose()
@@ -28,7 +28,21 @@ public sealed partial class Products : IDisposable
     }
     protected override async Task OnInitializedAsync()
     {
+        Logger.LogInformation("1. OnInitializedAsync Products");
         await GetProductsAsync();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await Task.Delay(1);
+        if (firstRender)
+        {
+            Logger.LogInformation("2. OnAfterRenderAsync firstRender Products");
+        }
+        else
+        {
+            Logger.LogInformation("2. OnInitializedAsync secondRender Products");
+        }
     }
 
     private async Task SelectedPage(int page)
@@ -40,12 +54,16 @@ public sealed partial class Products : IDisposable
 
     private async Task GetProductsAsync()
     {
-
         var pagingResponse = await ProductService.GetProductsAsync(_productRequest, _cts.Token);
         if (pagingResponse.Succeeded)
         {
             ProductList = pagingResponse.Data.Items;
             MetaData = pagingResponse.Data.MetaData;
+        }
+        else
+        {
+            IsError = true;
+            //StateHasChanged();//re-render manual
         }
     }
 
