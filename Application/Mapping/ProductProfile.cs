@@ -12,6 +12,7 @@ namespace FTI.PartnerMiddle.Application.Mapping.Deploys
         {
             _ = CreateMap<ProductResponse, Product>().ReverseMap();
             _ = CreateMap<CreateProductRequest, Product>().ReverseMap();
+            _ = CreateMap<UpdateProductRequest, Product>().ReverseMap();
         }
     }
 }

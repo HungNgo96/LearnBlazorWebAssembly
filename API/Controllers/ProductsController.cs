@@ -11,24 +11,24 @@ namespace API.Controllers
     [ApiController]
     public class ProductsController : ControllerBase
     {
-        private readonly LazyInstanceUtils<IProductService> _iProductService;
+        private readonly LazyInstanceUtils<IProductService> _productService;
 
         public ProductsController(IServiceProvider serviceProvider)
         {
-            _iProductService = new LazyInstanceUtils<IProductService>(serviceProvider);
+            _productService = new LazyInstanceUtils<IProductService>(serviceProvider);
         }
 
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            var products = await _iProductService.Value.GetProducts();
+            var products = await _productService.Value.GetProducts();
             return Ok(products);
         }
 
         [HttpGet]
         public async Task<IActionResult> GetProductsAsync([FromQuery] ProductRequest request, CancellationToken cancellationToken)
         {
-            var products = await _iProductService.Value.GetProductsAsync(request, cancellationToken);
+            var products = await _productService.Value.GetProductsAsync(request, cancellationToken);
 
             if (products.Succeeded)
             {
@@ -41,12 +41,12 @@ namespace API.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateProductAsync(CreateProductRequest request, CancellationToken cancellationToken)
         {
-            var products = await _iProductService.Value.CreateProductAsync(request, cancellationToken);
+            var products = await _productService.Value.CreateProductAsync(request, cancellationToken);
             return Ok(products);
         }
 
         [HttpPost]
-        public IActionResult Upload()
+        public async Task<IActionResult> Upload()
         {
             try
             {
@@ -55,12 +55,12 @@ namespace API.Controllers
                 var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
                 if (file.Length > 0)
                 {
-                    var fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName!.Trim('"');
+                    var fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName!.Trim('"') + DateTime.Now.ToString("yyyyMMddTHHmmss");
                     var fullPath = Path.Combine(pathToSave, fileName);
                     var dbPath = Path.Combine(folderName, fileName);
                     using (var stream = new FileStream(fullPath, FileMode.Create))
                     {
-                        file.CopyTo(stream);
+                        _ = file.CopyToAsync(stream);
                     }
                     return Ok(dbPath);
                 }
@@ -73,6 +73,30 @@ namespace API.Controllers
             {
                 return StatusCode(500, $"Internal server error: {ex}");
             }
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetProductByIdAsync([FromRoute] Guid id, CancellationToken cancellationToken)
+        {
+            var products = await _productService.Value.GetProductByIdAsync(id, cancellationToken);
+
+            return Ok(products);
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> UpdateProductAsync([FromBody] UpdateProductRequest request, CancellationToken cancellationToken)
+        {
+            var products = await _productService.Value.UpdateProductAsync(request, cancellationToken);
+
+            return Ok(products);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteProductAsync([FromRoute] Guid id, CancellationToken cancellationToken)
+        {
+            var products = await _productService.Value.DeleteProductAsync(id, cancellationToken);
+
+            return Ok(products);
         }
     }
 }

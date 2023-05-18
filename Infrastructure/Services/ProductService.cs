@@ -64,5 +64,46 @@ namespace Infrastructure.Services
                 ? await Result<PagedList<ProductResponse>>.SuccessAsync(data: PagedList<ProductResponse>.ToPagedList(productRes, request.PageNumber, request.PageSize), message: " Thành công.")
                 : await Result<PagedList<ProductResponse>>.FailAsync(message: " Thất bại.");
         }
+
+        public async Task<IResult<ProductResponse>> GetProductByIdAsync(Guid id, CancellationToken cancellationToken)
+        {
+            _logger.Request(nameof(ProductService), nameof(GetProductByIdAsync));
+
+            var product = await _productRepository.Value.GetProductByIdAsync(id, cancellationToken);
+
+            _logger.Response(nameof(ProductService), nameof(GetProductByIdAsync));
+
+            return product is not null
+                ? await Result<ProductResponse>.SuccessAsync(data: _mapper.Value.Map<ProductResponse>(product), message: " Thành công.")
+                : await Result<ProductResponse>.FailAsync(message: " Thất bại.");
+        }
+
+        public async Task<IResult<int>> UpdateProductAsync(UpdateProductRequest request, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            _logger.Request(nameof(ProductService), nameof(UpdateProductAsync));
+
+            (var result, var message) = await _productRepository.Value.UpdateProductAsync(_mapper.Value.Map<Product>(request), cancellationToken);
+
+            _logger.Response(nameof(ProductService), nameof(UpdateProductAsync));
+
+            return result > 0
+                ? await Result<int>.SuccessAsync(data: result, message: message)
+                : await Result<int>.FailAsync(message: message);
+        }
+
+        public async Task<IResult<int>> DeleteProductAsync(Guid id, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            _logger.Request(nameof(ProductService), nameof(DeleteProductAsync));
+
+            (var result, var message) = await _productRepository.Value.DeleteProductAsync(id, cancellationToken);
+
+            _logger.Response(nameof(ProductService), nameof(DeleteProductAsync));
+
+            return result > 0
+                ? await Result<int>.SuccessAsync(data: result, message: message)
+                : await Result<int>.FailAsync(message: message);
+        }
     }
 }

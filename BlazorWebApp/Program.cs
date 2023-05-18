@@ -1,9 +1,11 @@
 using ApplicationClient.Interfaces;
+using ApplicationClient.Options;
 using ApplicationClient.Services;
 using ApplicationClient.Ultilities;
 using BlazorWebApp;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
@@ -18,7 +20,7 @@ IConfiguration config = builder.Configuration;
 //add httpClient
 builder.Services.AddHttpClient();
 var urlApi = config.GetRequiredSection("Api:Url").Value ?? builder.HostEnvironment.BaseAddress;
-Console.WriteLine("urlApi::" + urlApi);
+_ = builder.Services.Configure<UrlProjectOption>(config.GetRequiredSection("Api"));
 builder.Services.AddHttpClient("ProductsAPI", (cl) => cl.BaseAddress = new Uri(urlApi));
 builder.Services.AddScoped<IProductService, ProductService>();
 //override httpclient default

@@ -1,11 +1,12 @@
 ﻿@page "/ll/createProduct"
+@using BlazorWebApp.Components
 
 <h2>Create Product Form</h2>
 
 <EditForm Model="@_product" OnValidSubmit="Create" class="card card-body bg-light mt-5">
     <DataAnnotationsValidator />
     <ValidationSummary />
-    <div class="form-group row">
+    <div class="form-group row mb-3">
         <label for="name" class="col-md-2 col-form-label">Name:</label>
         <div class="col-md-10">
             <InputText id="name" class="form-control" @bind-Value="_product.Name" />
@@ -13,7 +14,7 @@
         </div>
     </div>
 
-    <div class="form-group row">
+    <div class="form-group row mb-3">
         <label for="supplier" class="col-md-2 col-form-label">Supplier:</label>
         <div class="col-md-10">
             <InputText id="supplier" class="form-control" @bind-Value="_product.Supplier" />
@@ -21,7 +22,7 @@
         </div>
     </div>
 
-    <div class="form-group row">
+    <div class="form-group row mb-3">
         <label for="price" class="col-md-2 col-form-label">Price:</label>
         <div class="col-md-10">
             <InputNumber id="price" class="form-control" @bind-Value="_product.Price" />
@@ -29,11 +30,17 @@
         </div>
     </div>
 
-    <div class="form-group row">
+    <div class="form-group row mb-3">
         <label for="image" class="col-md-2 col-form-label">Image:</label>
         <div class="col-md-10">
             <InputText id="image" class="form-control" @bind-Value="_product.ImageUrl" />
             <ValidationMessage For="@(() => _product.ImageUrl)" />
+        </div>
+    </div>
+    <div class="form-group row mb-3">
+        <label for="image" class="col-md-2 col-form-label">File</label>
+        <div class="col-md-10">
+            <ImageUpload OnChange="AssignImageUrl" />
         </div>
     </div>
 
@@ -44,3 +51,6 @@
     </div>
 
 </EditForm>
+
+
+<SuccessNotification @ref="_notification" />

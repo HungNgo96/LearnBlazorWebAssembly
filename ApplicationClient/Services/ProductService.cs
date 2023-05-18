@@ -1,7 +1,9 @@
 ﻿using ApplicationClient.Interfaces;
+using ApplicationClient.Options;
 using ApplicationClient.Requests;
 using ApplicationClient.Responses;
 using ApplicationClient.Responses.Paging;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Shared.Helper;
 using Shared.Model.Http;
@@ -9,19 +11,19 @@ using Shared.Model.Paging;
 using Shared.Requests;
 using Shared.Wrapper;
 using System.Text.Json;
-using static System.Net.WebRequestMethods;
-using System.Threading;
 
 namespace ApplicationClient.Services
 {
     public class ProductService : IProductService
     {
         private readonly IHttpClientFactory _httpClientFactory;
-        private readonly JsonSerializerOptions _options;
-        public ProductService(IHttpClientFactory httpClientFactory)
+        private readonly JsonSerializerOptions _jsonOptions;
+        private readonly UrlProjectOption _options;
+        public ProductService(IHttpClientFactory httpClientFactory, IOptions<UrlProjectOption> options)
         {
             _httpClientFactory = httpClientFactory;
-            _options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+            _jsonOptions = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+            _options = options.Value;
         }
 
         public async Task<IResult<PagingResponse<ProductResponse>>> GetProductsAsync(ProductRequest request, CancellationToken cancellationToken)
@@ -31,7 +33,7 @@ namespace ApplicationClient.Services
             var client = _httpClientFactory.CreateClient("ProductsAPI");
 
             (var result, var errorModel, var header) = await CallApi<ProductRequest, BaseResponse<List<ProductResponse>>>
-                .GetAsJsonAndHeaderAsync(request, client.BaseAddress!.ToString(), "api/Products/GetProducts", new() { Client = client }, cancellationToken);
+                .GetAsJsonAndHeaderAsync(request, client.BaseAddress!.ToString(), _options.Products.GetProducts, new() { Client = client }, cancellationToken);
 
             if (!errorModel.Succeeded)
             {
@@ -46,7 +48,7 @@ namespace ApplicationClient.Services
             var pagingResponse = new PagingResponse<ProductResponse>
             {
                 Items = result.Data,
-                MetaData = System.Text.Json.JsonSerializer.Deserialize<MetaData>(header.GetValues("X-Pagination").First() ?? string.Empty, _options)
+                MetaData = System.Text.Json.JsonSerializer.Deserialize<MetaData>(header.GetValues("X-Pagination").First() ?? string.Empty, _jsonOptions)
             };
 
             return await Result<PagingResponse<ProductResponse>>.SuccessAsync(data: pagingResponse, messages: result.Messages);
@@ -57,7 +59,7 @@ namespace ApplicationClient.Services
            var http =  _httpClientFactory.CreateClient("ProductsAPI");
 
             (var result, var errorModel) = await CallApi<string, BaseResponse<List<ProductResponse>>>
-                .GetAsJsonAsync(null!, http.BaseAddress!.ToString(), "api/Products/Get", new() { Client = http }, default);
+                .GetAsJsonAsync(null!, http.BaseAddress!.ToString(), _options.Products.Get, new() { Client = http }, default);
 
             if (!errorModel.Succeeded)
             {
@@ -77,7 +79,7 @@ namespace ApplicationClient.Services
             var http = _httpClientFactory.CreateClient("ProductsAPI");
 
             (var result, var errorModel) = await CallApi<CreateProductClientRequest, BaseResponse<bool?>>
-                .PostAsJsonAsync(request, string.Empty, "api/Products/CreateProduct", new() { Client = http }, cancellationToken);
+                .PostAsJsonAsync(request, string.Empty, _options.Products.CreateProduct, new() { Client = http }, cancellationToken);
 
             if (!errorModel.Succeeded)
             {
@@ -96,18 +98,79 @@ namespace ApplicationClient.Services
         {
             var client = _httpClientFactory.CreateClient("ProductsAPI");
 
-            var postResult = await client.PostAsync("/api/Products/upload", content);
+            var postResult = await client.PostAsync(_options.Products.Upload, content);
             var postContent = await postResult.Content.ReadAsStringAsync();
 
             if (!postResult.IsSuccessStatusCode)
             {
-                return await Result<string>.FailAsync(message: postResult.ReasonPhrase);
+                return await Result<string>.FailAsync(message: postResult.ReasonPhrase!);
             }
             else
             {
-                var imgUrl = Path.Combine("https://localhost:5011/", postContent);
-                return await Result<string>.SuccessAsync(data: imgUrl, message: postResult.ReasonPhrase);
+                var imgUrl = Path.Combine(_options.Url, postContent);
+                return await Result<string>.SuccessAsync(data: imgUrl, message: postResult.ReasonPhrase!);
             }
+        }
+
+        public async Task<IResult<ProductResponse>> GetProductByIdAsync(string id, CancellationToken cancellationToken)
+        {
+            var http = _httpClientFactory.CreateClient("ProductsAPI");
+
+            (var result, var errorModel) = await CallApi<string, BaseResponse<ProductResponse>>
+                .GetAsJsonAsync(null!, string.Empty, $"{_options.Products.GetProductById}/{id}", new() { Client = http }, cancellationToken);
+
+            if (!errorModel.Succeeded)
+            {
+                return await Result<ProductResponse>.FailAsync(message: errorModel.Message ?? string.Empty);
+            }
+
+            if (!result!.Succeeded)
+            {
+                return await Result<ProductResponse>.FailAsync(messages: result.Messages ?? new List<string>());
+            }
+
+            return await Result<ProductResponse>.SuccessAsync(data: result.Data);
+        }
+
+        public async Task<IResult<int>> DeleteProductAsync(Guid id, CancellationToken cancellationToken)
+        {
+            Console.WriteLine("ProductService DeleteProductAsync request");
+            var client = _httpClientFactory.CreateClient("ProductsAPI");
+
+            (var result, var errorModel) = await CallApi<string, BaseResponse<int?>>
+                .DeleteAsJsonAsync(null!, string.Empty, $"{_options.Products.DeleteProduct}/{id}", new() { Client = client }, cancellationToken);
+
+            if (!errorModel.Succeeded)
+            {
+                return await Result<int>.FailAsync(message: errorModel.Message ?? string.Empty);
+            }
+
+            if (!result!.Succeeded)
+            {
+                return await Result<int>.FailAsync(messages: result.Messages ?? new List<string>());
+            }
+
+            return await Result<int>.SuccessAsync(data: (int)result.Data!);
+        }
+
+        public async Task<IResult<int>> UpdateProductAsync(UpdateProductRequest request, CancellationToken cancellationToken)
+        {
+            var client = _httpClientFactory.CreateClient("ProductsAPI");
+
+            (var result, var errorModel) = await CallApi<UpdateProductRequest, BaseResponse<int?>>
+                .PutAsJsonAsync(request, string.Empty, _options.Products.UpdateProduct, new() { Client = client }, cancellationToken);
+
+            if (!errorModel.Succeeded)
+            {
+                return await Result<int>.FailAsync(message: errorModel.Message ?? string.Empty);
+            }
+
+            if (!result!.Succeeded)
+            {
+                return await Result<int>.FailAsync(messages: result.Messages ?? new List<string>());
+            }
+
+            return await Result<int>.SuccessAsync(data: (int)result.Data!);
         }
     }
 }

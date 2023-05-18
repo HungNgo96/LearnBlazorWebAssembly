@@ -264,7 +264,7 @@ namespace Shared.Helper
                     client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(option.AuthType, option.Token);
                 }
 
-                string urlQueryString = string.Format("{0}?{1}", path, ParseModelToQueryString(value));
+                string urlQueryString = value == null ? path : string.Format("{0}?{1}", path, ParseModelToQueryString(value));
                 ///var contractJson = JsonConvert.SerializeObject(contract);
                 HttpResponseMessage httpResponseMessage = await client.DeleteAsync(urlQueryString, cancellationToken);
                 ///wrire error to error model

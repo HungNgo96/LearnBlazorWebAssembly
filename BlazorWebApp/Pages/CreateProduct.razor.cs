@@ -5,10 +5,11 @@ using Microsoft.JSInterop;
 
 namespace BlazorWebApp.Pages
 {
-    public partial class CreateProduct : IDisposable
+    public sealed partial class CreateProduct : IDisposable
     {
         private CancellationTokenSource cts = new CancellationTokenSource();
         private CreateProductClientRequest _product = new CreateProductClientRequest();
+        private SuccessNotification _notification;
         private bool IsInvalidSubmit { get; set; } = false;
         [Inject] private IJSRuntime _js { get; set; }
 
@@ -27,14 +28,16 @@ namespace BlazorWebApp.Pages
             var result = await _productService.CreateProductAsync(_product, cts.Token);
             if (result.Succeeded)
             {
-                await _js.InvokeVoidAsync("alert(\"Tạo phiếu.\")");
-                _navigationManager.NavigateTo("/ll/products");
+                //await _js.InvokeVoidAsync("alert","Tạo phiếu thành công");
+                 _notification.Show();
             }
             else
             {
-                await _js.InvokeVoidAsync("alert(\"Tạo phiếu thất bại.\")");
+                await _js.InvokeVoidAsync("alert","Tạo phiếu thất bại");
             }
         }
+
+        private void AssignImageUrl(string imgUrl) => _product.ImageUrl = imgUrl;
 
         private async Task OnInvalidSubmit()
         {

@@ -1,23 +1,31 @@
 ﻿using ApplicationClient.Interfaces;
 using ApplicationClient.Responses;
 using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Shared.Model.Paging;
 using Shared.Requests;
 
 namespace BlazorWebApp.Pages;
 
-public partial class Products
+public sealed partial class Products : IDisposable
 {
+    private CancellationTokenSource cts = new CancellationTokenSource();
     public List<ProductResponse> ProductList { get; set; } = new List<ProductResponse>();
     public MetaData MetaData { get; set; } = new MetaData();
 
     [Inject]
     public IProductService ProductService { get; set; }
+    [Inject]
+    public ILogger<Products> Logger { get; set; }
 
     private ProductRequest _productRequest = new ProductRequest();
     private CancellationTokenSource _cts = new();
-
+    public void Dispose()
+    {
+        cts.Cancel();
+        cts.Dispose();
+    }
     protected override async Task OnInitializedAsync()
     {
         await GetProductsAsync();
@@ -25,14 +33,14 @@ public partial class Products
 
     private async Task SelectedPage(int page)
     {
-        Console.WriteLine("SelectedPage:::" + page);
+
         _productRequest.PageNumber = page;
         await GetProductsAsync();
     }
 
     private async Task GetProductsAsync()
     {
-        Console.WriteLine("request:" + JsonConvert.SerializeObject(_productRequest));
+
         var pagingResponse = await ProductService.GetProductsAsync(_productRequest, _cts.Token);
         if (pagingResponse.Succeeded)
         {
@@ -54,5 +62,18 @@ public partial class Products
         Console.WriteLine(orderBy);
         _productRequest.OrderBy = orderBy;
         await GetProductsAsync();
+    }
+
+    private async Task DeleteProduct(Guid id)
+    {
+        Console.WriteLine("DeleteProduct request");
+        var result = await ProductService.DeleteProductAsync(id, cts.Token);
+        if(result.Succeeded)
+        {
+            _productRequest.PageNumber = 1;
+            await GetProductsAsync();
+        }
+
+        Console.WriteLine("DeleteProduct response");
     }
 }

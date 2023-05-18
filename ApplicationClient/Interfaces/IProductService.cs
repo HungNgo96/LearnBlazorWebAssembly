@@ -13,5 +13,8 @@ namespace ApplicationClient.Interfaces
         Task<IResult<bool>> CreateProductAsync(CreateProductClientRequest request, CancellationToken cancellationToken);
 
         Task<IResult<string>> UploadProductImage(MultipartFormDataContent content);
+        Task<IResult<ProductResponse>> GetProductByIdAsync(string id, CancellationToken cancellationToken);
+        Task<IResult<int>> DeleteProductAsync(Guid id, CancellationToken cancellationToken);
+        Task<IResult<int>> UpdateProductAsync(UpdateProductRequest request, CancellationToken cancellationToken);
     }
 }

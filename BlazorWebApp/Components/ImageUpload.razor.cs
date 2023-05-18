@@ -31,8 +31,8 @@ namespace BlazorWebApp.Components
                         content.Add(new StreamContent(ms, Convert.ToInt32(resizedFile.Size)), "image", imageFile.Name);
                      
                         var result  = await _productService.UploadProductImage(content);
-
-                        await OnChange.InvokeAsync(result.Data);
+                        ImgUrl = result.Data;
+                        await OnChange.InvokeAsync(ImgUrl);
                     }
                 }
             }
