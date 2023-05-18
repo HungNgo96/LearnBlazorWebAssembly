@@ -23,4 +23,9 @@
     <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="StaticFiles\" />
+    <Folder Include="wwwroot\" />
+  </ItemGroup>
+
 </Project>

@@ -2,7 +2,7 @@
 
 <h2>Create Product Form</h2>
 
-<EditForm Model="_product" OnSubmit="Create" class="card card-body bg-light mt-5">
+<EditForm Model="@_product" OnValidSubmit="Create" class="card card-body bg-light mt-5">
     <DataAnnotationsValidator />
     <ValidationSummary />
     <div class="form-group row">

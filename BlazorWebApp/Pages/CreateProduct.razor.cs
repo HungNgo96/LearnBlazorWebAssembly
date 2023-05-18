@@ -1,6 +1,7 @@
 ﻿using ApplicationClient.Interfaces;
 using ApplicationClient.Requests;
 using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
 
 namespace BlazorWebApp.Pages
 {
@@ -8,9 +9,12 @@ namespace BlazorWebApp.Pages
     {
         private CancellationTokenSource cts = new CancellationTokenSource();
         private CreateProductClientRequest _product = new CreateProductClientRequest();
+        private bool IsInvalidSubmit { get; set; } = false;
+        [Inject] private IJSRuntime _js { get; set; }
 
-        [Inject]
-        public IProductService ProductService { get; set; }
+        [Inject] private IProductService _productService { get; set; }
+
+        [Inject] private NavigationManager _navigationManager { get; set; }
 
         public void Dispose()
         {
@@ -20,7 +24,28 @@ namespace BlazorWebApp.Pages
 
         private async Task Create()
         {
-            await ProductService.CreateProductAsync(_product, cts.Token);
+            var result = await _productService.CreateProductAsync(_product, cts.Token);
+            if (result.Succeeded)
+            {
+                await _js.InvokeVoidAsync("alert(\"Tạo phiếu.\")");
+                _navigationManager.NavigateTo("/ll/products");
+            }
+            else
+            {
+                await _js.InvokeVoidAsync("alert(\"Tạo phiếu thất bại.\")");
+            }
+        }
+
+        private async Task OnInvalidSubmit()
+        {
+            IsInvalidSubmit = true;
+        }
+
+        private async Task OnValidSubmit()
+        {
+            await _js.InvokeVoidAsync("alert(\"Thông tin  hợp lệ.\")");
+
+            IsInvalidSubmit = false;
         }
     }
 }
