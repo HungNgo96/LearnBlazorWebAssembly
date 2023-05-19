@@ -17,43 +17,51 @@ namespace BlazorWebApp.Shared
             { "width", "200px" },
         };
 
-
+        [Inject] private ILogger<Learning> Logger { get; set; }
         [Parameter]
         public RenderFragment LeaningChildContent { get; set; }
 
+        protected override Task OnInitializedAsync()
+        {
+            Logger.LogInformation($"1. Learning - OnInitialized => Title: {Title}, CurrentCount: {CurrentCount}");
+            return base.OnInitializedAsync();
+        }
+
         public override Task SetParametersAsync(ParameterView parameters)
         {
-            Console.WriteLine($"SetParametersAsync => parameters: {JsonConvert.SerializeObject(parameters)}");
+            Logger.LogInformation($"2.1 Learning - SetParametersAsync => parameters: {JsonConvert.SerializeObject(parameters)}");
             return base.SetParametersAsync(parameters);
         }
 
-        protected override Task OnInitializedAsync()
-        {
-            Console.WriteLine($"OnInitialized => Title: {Title}, CurrentCount: {CurrentCount}");
-            return base.OnInitializedAsync();
-        }
         protected override Task OnParametersSetAsync()
         {
-            Console.WriteLine($"OnParameterSet => Title: {Title}, CurrentCount: {CurrentCount}");
+            Logger.LogInformation($"2.2 Learning - OnParameterSet => Title: {Title}, CurrentCount: {CurrentCount}");
             return base.OnParametersSetAsync();
         }
         protected override Task OnAfterRenderAsync(bool firstRender)
         {
             if (firstRender)
             {
-                Console.WriteLine("This is the first render of the component");
+                Logger.LogInformation("3.1 Learning - OnAfterRenderAsync:: This is the first render of the component");
             }
             else
             {
-                Console.WriteLine("This is the render of the component");
+                Logger.LogInformation("3.2 Learning - OnAfterRenderAsync:: This is the render of the component");
             }
 
             return base.OnAfterRenderAsync(firstRender);
         }
         protected override bool ShouldRender()
         {
+            Logger.LogInformation("4. Learning - ShouldRender:: Render");
             //return false;
             return base.ShouldRender();//dèault truek
+        }
+
+        private void ReRender()
+        {
+            Logger.LogInformation("5. Learning - ReRender");
+            StateHasChanged();
         }
     }
 }

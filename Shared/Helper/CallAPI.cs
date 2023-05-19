@@ -121,26 +121,25 @@ namespace Shared.Helper
             ErrorModel errorModel = new();
             try
             {
-                var client = option.Client;
 
                 if (!string.IsNullOrEmpty(uri))
                 {
-                    client.BaseAddress = new Uri(uri);
+                    option.Client.BaseAddress = new Uri(uri);
                 }
 
-                client.Timeout = TimeSpan.FromMinutes(option.Timeout);
+                option.Client.Timeout = TimeSpan.FromMinutes(option.Timeout);
 
                 if (!string.IsNullOrEmpty(option.Token))
                 {
-                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(option.AuthType, option.Token);
+                    option.Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(option.AuthType, option.Token);
                 }
 
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                option.Client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
                 string json = System.Text.Json.JsonSerializer.Serialize(value);
                 StringContent httpContent = new(json, Encoding.UTF8, "application/json");
 
-                HttpResponseMessage httpResponseMessage = await client.PostAsync(path, httpContent, cancellationToken);
+                HttpResponseMessage httpResponseMessage = await option.Client.PostAsync(path, httpContent, cancellationToken);
                 ///write error to error model
                 errorModel.StatusCode = (int)httpResponseMessage.StatusCode;
                 errorModel.Message = httpResponseMessage.ReasonPhrase;
@@ -165,23 +164,22 @@ namespace Shared.Helper
             ErrorModel errorModel = new();
             try
             {
-                var client = option.Client;
 
                 if (!string.IsNullOrEmpty(uri))
                 {
-                    client.BaseAddress = new Uri(uri);
+                    option.Client.BaseAddress = new Uri(uri);
                 }
 
-                client.Timeout = TimeSpan.FromMinutes(option.Timeout);
+                option.Client.Timeout = TimeSpan.FromMinutes(option.Timeout);
 
                 if (!string.IsNullOrEmpty(option.Token))
                 {
-                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(option.AuthType, option.Token);
+                    option.Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(option.AuthType, option.Token);
                 }
 
                 FormUrlEncodedContent content = new(value);
 
-                HttpResponseMessage httpResponseMessage = await client.PostAsync(path, content, cancellationToken);
+                HttpResponseMessage httpResponseMessage = await option.Client.PostAsync(path, content, cancellationToken);
                 ///write error to error model
                 errorModel.StatusCode = (int)httpResponseMessage.StatusCode;
                 errorModel.Message = httpResponseMessage.ReasonPhrase;
@@ -205,25 +203,23 @@ namespace Shared.Helper
             ErrorModel errorModel = new();
             try
             {
-                var client = option.Client;
-
                 if (!string.IsNullOrEmpty(uri))
                 {
-                    client.BaseAddress = new Uri(uri);
+                    option.Client.BaseAddress = new Uri(uri);
                 }
 
-                client.Timeout = TimeSpan.FromMinutes(option.Timeout);
+                option.Client.Timeout = TimeSpan.FromMinutes(option.Timeout);
 
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                option.Client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
                 if (!string.IsNullOrEmpty(option.Token))
                 {
-                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(option.AuthType, option.Token);
+                    option.Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(option.AuthType, option.Token);
                 }
 
                 string json = System.Text.Json.JsonSerializer.Serialize(value);
                 StringContent httpContent = new(json, Encoding.UTF8, "application/json");
-                HttpResponseMessage httpResponseMessage = await client.PutAsync(path, httpContent, cancellationToken);
+                HttpResponseMessage httpResponseMessage = await option.Client.PutAsync(path, httpContent, cancellationToken);
                 ///wrire error to error model
                 errorModel.StatusCode = (int)httpResponseMessage.StatusCode;
                 errorModel.Message = httpResponseMessage.ReasonPhrase;
@@ -248,25 +244,23 @@ namespace Shared.Helper
             ErrorModel errorModel = new();
             try
             {
-                var client = option.Client;
-
                 if (!string.IsNullOrEmpty(uri))
                 {
-                    client.BaseAddress = new Uri(uri);
+                    option.Client.BaseAddress = new Uri(uri);
                 }
 
-                client.Timeout = TimeSpan.FromMinutes(option.Timeout);
+                option.Client.Timeout = TimeSpan.FromMinutes(option.Timeout);
 
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                option.Client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
                 if (!string.IsNullOrEmpty(option.Token))
                 {
-                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(option.AuthType, option.Token);
+                    option.Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(option.AuthType, option.Token);
                 }
 
                 string urlQueryString = value == null ? path : string.Format("{0}?{1}", path, ParseModelToQueryString(value));
                 ///var contractJson = JsonConvert.SerializeObject(contract);
-                HttpResponseMessage httpResponseMessage = await client.DeleteAsync(urlQueryString, cancellationToken);
+                HttpResponseMessage httpResponseMessage = await option.Client.DeleteAsync(urlQueryString, cancellationToken);
                 ///wrire error to error model
                 errorModel.StatusCode = (int)httpResponseMessage.StatusCode;
                 errorModel.Message = httpResponseMessage.ReasonPhrase;

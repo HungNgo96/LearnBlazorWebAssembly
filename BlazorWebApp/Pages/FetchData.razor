@@ -43,15 +43,17 @@ else
 
     [Inject] private IHttpClientFactory _ihttpClientFactory { get; set; }
     [Inject] private IProductService _productService { get; set; }
+    [Inject] private ILogger<FetchData> Logger { get; set; }
     protected override async Task OnInitializedAsync()
     {
+        Logger.LogWarning("1. OnInitializedAsync");
         var http = _ihttpClientFactory.CreateClient("ProductsAPI");
-        //forecasts = await Http.GetFromJsonAsync<WeatherForecast[]>("sample-data/weather.json");
-        forecasts = await http.GetFromJsonAsync<WeatherForecast[]>("WeatherForecast/Get");
+        forecasts = await Http.GetFromJsonAsync<WeatherForecast[]>("sample-data/weather.json");
+        //forecasts = await http.GetFromJsonAsync<WeatherForecast[]>("WeatherForecast/Get");
 
-        var result = await _productService.GetProductsAsync();
+        //var result = await _productService.GetProductsAsync();
 
-        Console.WriteLine("result::" + JsonConvert.SerializeObject(result));
+        //Console.WriteLine("result::" + JsonConvert.SerializeObject(result));
 
     }
 

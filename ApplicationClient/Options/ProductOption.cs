@@ -1,6 +1,6 @@
 ﻿namespace ApplicationClient.Options
 {
-    public class ProjectUrlEnv
+    public class ProductOption
     {
         public string GetProducts { get; set; }
         public string Get { get; set; }

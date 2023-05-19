@@ -1,4 +1,5 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
+﻿
+<div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
         <a class="navbar-brand" href="">BlazorWebApp</a>
         <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
@@ -15,7 +16,7 @@
             </NavLink>
         </div>
         <div class="nav-item px-3">
-            <NavLink class="nav-link" href="ll/demo">
+            <NavLink class="nav-link" href="ll/demo" @onclick='() => HandleClick("ll/demo")'>
                 <span class="oi oi-list-rich" aria-hidden="true"></span> Demo
             </NavLink>
         </div>
@@ -29,11 +30,16 @@
                 <span class="oi oi-list-rich" aria-hidden="true"></span> Fetch data
             </NavLink>
         </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="ll/products" @onclick='() => HandleClick("ll/products")'>
-                <span class="oi oi-list-rich" aria-hidden="true"></span> Products
-            </NavLink>
-        </div>
+         <AuthorizeView>
+             <Authorized>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="ll/products" @onclick='() => HandleClick("ll/products")'>
+                        <span class="oi oi-list-rich" aria-hidden="true"></span> Products
+                    </NavLink>
+                </div>
+             </Authorized>
+         </AuthorizeView>
+     
 
         <div class="nav-item px-3">
             <NavLink class="nav-link" href="ll/link">
@@ -44,18 +50,43 @@
 </div>
 
 @code {
+    @inject ILogger<NavMenu> Logger;
+    @inject NavigationManager NavigationManager;
+
     private bool collapseNavMenu = true;
-    private string url{ get; set; }
-    private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+    private string url { get; set; }
+    private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+    private bool IsFirstRender = true;
+   
+    protected override Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            IsFirstRender = false;
+            Logger.LogInformation("This is the first render of the component");
+            Logger.LogInformation("IsFirstRender::" + IsFirstRender);
+        }
+        else
+        {
+            Logger.LogInformation("This is the render of the component");
+        }
+
+        return base.OnAfterRenderAsync(firstRender);
+    }
 
     private void ToggleNavMenu()
     {
         collapseNavMenu = !collapseNavMenu;
     }
-    @inject NavigationManager NavigationManager;
+   
 
-    private void HandleClick(string url) =>
-        //var href = e;
-        //e.
-        NavigationManager.NavigateTo(url, false);
+    private void HandleClick(string url)
+    {
+        Logger.LogInformation("NavMenu::Request");
+        if (!IsFirstRender)
+        {
+            Logger.LogInformation("NavMenu::Render");
+            NavigationManager.NavigateTo(url, false);
+        }
+    }
 }

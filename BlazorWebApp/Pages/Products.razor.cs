@@ -1,10 +1,11 @@
 ﻿using ApplicationClient.Interfaces;
 using ApplicationClient.Responses;
+using ApplicationClient.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Shared.Model.Paging;
-using Shared.Requests;
+using Shared.Requests.Products;
 
 namespace BlazorWebApp.Pages;
 
@@ -17,6 +18,8 @@ public sealed partial class Products : IDisposable
     [Inject]
     private IProductService ProductService { get; set; }
     [Inject]
+    public HttpInterceptorService Interceptor { get; set; }
+    [Inject]
     public ILogger<Products> Logger { get; set; }
     private bool IsError = false;
     private ProductRequest _productRequest = new ProductRequest();
@@ -25,9 +28,11 @@ public sealed partial class Products : IDisposable
     {
         cts.Cancel();
         cts.Dispose();
+        Interceptor.DisposeEvent();
     }
     protected override async Task OnInitializedAsync()
     {
+        Interceptor.RegisterEvent();
         Logger.LogInformation("1. OnInitializedAsync Products");
         await GetProductsAsync();
     }

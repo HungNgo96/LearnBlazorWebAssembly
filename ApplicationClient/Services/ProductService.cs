@@ -8,7 +8,7 @@ using Newtonsoft.Json;
 using Shared.Helper;
 using Shared.Model.Http;
 using Shared.Model.Paging;
-using Shared.Requests;
+using Shared.Requests.Products;
 using Shared.Wrapper;
 using System.Text.Json;
 
@@ -18,8 +18,8 @@ namespace ApplicationClient.Services
     {
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly JsonSerializerOptions _jsonOptions;
-        private readonly UrlProjectOption _options;
-        public ProductService(IHttpClientFactory httpClientFactory, IOptions<UrlProjectOption> options)
+        private readonly UrlOption _options;
+        public ProductService(IHttpClientFactory httpClientFactory, IOptions<UrlOption> options)
         {
             _httpClientFactory = httpClientFactory;
             _jsonOptions = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };

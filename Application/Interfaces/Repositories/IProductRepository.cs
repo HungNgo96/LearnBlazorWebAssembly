@@ -1,5 +1,5 @@
 ﻿using Domain.Entity;
-using Shared.Requests;
+using Shared.Requests.Products;
 using Shared.Wrapper;
 
 namespace Application.Interfaces.Repositories

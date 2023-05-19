@@ -1,14 +1,15 @@
 ﻿using Application.Interfaces.Services;
 using Application.Ultilities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using Shared.Requests;
+using Shared.Requests.Products;
 using System.Net.Http.Headers;
 
 namespace API.Controllers
 {
     [Route("api/[controller]/[action]")]
-    [ApiController]
+    [ApiController, Authorize]
     public class ProductsController : ControllerBase
     {
         private readonly LazyInstanceUtils<IProductService> _productService;

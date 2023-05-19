@@ -1,4 +1,4 @@
-﻿namespace Shared.Requests
+﻿namespace Shared.Requests.Products
 {
     public class ProductRequest
     {
@@ -13,11 +13,11 @@
             }
             set
             {
-                _pageSize = (value > maxPageSize) ? maxPageSize : value;
+                _pageSize = value > maxPageSize ? maxPageSize : value;
             }
         }
 
-        public string? SearchTerm { get; set; }
+        public string SearchTerm { get; set; }
 
         public string OrderBy { get; set; } = "name";
     }

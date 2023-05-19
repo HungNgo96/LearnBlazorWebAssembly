@@ -1,6 +1,6 @@
 ﻿using ApplicationClient.Interfaces;
 using Microsoft.AspNetCore.Components;
-using Shared.Requests;
+using Shared.Requests.Products;
 
 namespace BlazorWebApp.Pages
 {

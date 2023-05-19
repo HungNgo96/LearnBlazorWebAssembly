@@ -1,7 +1,7 @@
 ﻿using ApplicationClient.Requests;
 using ApplicationClient.Responses;
 using ApplicationClient.Responses.Paging;
-using Shared.Requests;
+using Shared.Requests.Products;
 using Shared.Wrapper;
 
 namespace ApplicationClient.Interfaces

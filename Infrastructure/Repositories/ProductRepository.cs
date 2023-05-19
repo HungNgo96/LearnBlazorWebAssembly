@@ -3,7 +3,7 @@ using Domain.Entity;
 using Infrastructure.DbContexts;
 using Infrastructure.Extensions;
 using Microsoft.EntityFrameworkCore;
-using Shared.Requests;
+using Shared.Requests.Products;
 
 namespace Infrastructure.Repositories
 {

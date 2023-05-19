@@ -8,6 +8,12 @@ using Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 using Application.Extensions;
 using Microsoft.Extensions.FileProviders;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using Domain.Entity;
 
 IConfiguration config = new ConfigurationBuilder()
     .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
@@ -25,22 +31,50 @@ services.AddCors(policy =>
         .AllowAnyOrigin()
         .AllowAnyHeader()
         .AllowAnyMethod()
-        .WithExposedHeaders("X-Pagination"));
+    .WithExposedHeaders("X-Pagination"));
 });
+
+//authentication
+services.AddIdentity<User, IdentityRole>()
+  .AddEntityFrameworkStores<BlazorWebContext>();
+
+var jwtSettings = builder.Configuration.GetSection("JWTSettings");
+builder.Services.AddAuthentication(opt =>
+{
+    opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = jwtSettings["validIssuer"],
+        ValidAudience = jwtSettings["validAudience"],
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["securityKey"]))
+    };
+});
+//end authentication
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 services.AddEndpointsApiExplorer();
 services.AddSwaggerGen();
 _ = builder.Services.Configure<ConnectionStringOptions>(builder.Configuration.GetRequiredSection("ConnectionStrings"));
+_ = builder.Services.Configure<JwtOption>(builder.Configuration.GetRequiredSection("JWTSettings"));
 services.AddControllers();
 
 services.AddDbContext<BlazorWebContext>(op =>
 {
     op.UseSqlServer(config.GetRequiredSection("ConnectionStrings:SqlServer").Value, x => x.MigrationsAssembly("Infrastructure"));
-});
+}, contextLifetime: ServiceLifetime.Scoped);
+
+//service DJ
 services.AddApplicationLayer();
 services.AddScoped(typeof(Lazy<>), typeof(LazyInstanceUtils<>));
 services.AddScoped<IProductRepository, ProductRepository>();
 services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<ITokenService, TokenService>();
 
 var app = builder.Build();
 
@@ -60,6 +94,7 @@ app.UseStaticFiles(new StaticFileOptions()
 
 //app.UseHttpsRedirection();
 app.UseCors("CorsPolicy");
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

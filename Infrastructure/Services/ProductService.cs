@@ -6,7 +6,7 @@ using Domain.Entity;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Shared.Extensions;
-using Shared.Requests;
+using Shared.Requests.Products;
 using Shared.Responses.Products;
 using Shared.Wrapper;
 
