@@ -24,12 +24,12 @@ namespace API.Controllers
 
         public AccountsController(UserManager<User> userManager,
                                   IOptions<JwtOption> options,
-                                  LazyInstanceUtils<ITokenService> tokenService,
+                                  IServiceProvider serviceProvider,
                                   ILogger<AccountsController> logger)
         {
             _userManager = userManager;
             _options = options.Value;
-            _tokenService = tokenService;
+            _tokenService = new LazyInstanceUtils<ITokenService>(serviceProvider);
             _logger = logger;
         }
 
@@ -77,7 +77,8 @@ namespace API.Controllers
             return Ok(await Result<AuthResponse>.SuccessAsync(data: new()
             {
                 Token = token,
-                ExpiryInMinutes = int.Parse(_options.ExpiryInMinutes)
+                ExpiryInMinutes = int.Parse(_options.ExpiryInMinutes),
+                RefreshToken = user.RefreshToken
             }, message: "Authentication", statusCode: (int)HttpStatusCode.OK));
         }
     }

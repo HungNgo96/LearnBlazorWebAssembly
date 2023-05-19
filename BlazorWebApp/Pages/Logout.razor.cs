@@ -1,5 +1,6 @@
 ﻿using ApplicationClient.Interfaces;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 
 namespace BlazorWebApp.Pages
 {
@@ -13,7 +14,8 @@ namespace BlazorWebApp.Pages
         protected override async Task OnInitializedAsync()
         {
             await AuthenticationService.Logout();
-            NavigationManager.NavigateTo("/");
+            //NavigationManager.NavigateTo("/");
+            NavigationManager.NavigateToLogout("/ll/logout", "/ll/demo");
         }
     }
 }

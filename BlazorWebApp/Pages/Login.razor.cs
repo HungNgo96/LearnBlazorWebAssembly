@@ -1,18 +1,21 @@
-﻿using ApplicationClient.Interfaces;
+﻿using ApplicationClient.Extensions;
+using ApplicationClient.Interfaces;
 using Microsoft.AspNetCore.Components;
 using Shared.Requests.Auth;
 
 namespace BlazorWebApp.Pages
 {
-    public partial class Login : IDisposable
+    public sealed partial class Login : IDisposable
     {
         private CancellationTokenSource _tokenSource = new CancellationTokenSource();
         private UserForAuthenticationRequest _userForAuthentication = new UserForAuthenticationRequest();
 
         [Inject]
         public IAuthenticationService AuthenticationService { get; set; }
+
         [Inject]
         public NavigationManager NavigationManager { get; set; }
+
         public bool ShowAuthError { get; set; }
         public string Error { get; set; }
 
@@ -35,7 +38,15 @@ namespace BlazorWebApp.Pages
             }
             else
             {
-                NavigationManager.NavigateTo("/ll");
+                var url = NavigationManager.QueryString("returnUrl");
+                if (!string.IsNullOrEmpty(url))
+                {
+                    NavigationManager.NavigateTo(url);
+                }
+                else
+                {
+                    NavigationManager.NavigateTo("/");
+                }
             }
         }
     }

@@ -3,6 +3,7 @@ using ApplicationClient.Options;
 using ApplicationClient.Requests;
 using ApplicationClient.Responses;
 using ApplicationClient.Responses.Paging;
+using Blazored.LocalStorage;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Shared.Helper;
@@ -19,11 +20,13 @@ namespace ApplicationClient.Services
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly JsonSerializerOptions _jsonOptions;
         private readonly UrlOption _options;
-        public ProductService(IHttpClientFactory httpClientFactory, IOptions<UrlOption> options)
+        private readonly ILocalStorageService _localStorage;
+        public ProductService(IHttpClientFactory httpClientFactory, IOptions<UrlOption> options, ILocalStorageService localStorageService)
         {
             _httpClientFactory = httpClientFactory;
             _jsonOptions = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
             _options = options.Value;
+            _localStorage = localStorageService;
         }
 
         public async Task<IResult<PagingResponse<ProductResponse>>> GetProductsAsync(ProductRequest request, CancellationToken cancellationToken)
@@ -31,9 +34,9 @@ namespace ApplicationClient.Services
 
             Console.WriteLine("GetProductsAsync::" + JsonConvert.SerializeObject(request));
             var client = _httpClientFactory.CreateClient("ProductsAPI");
-
+            string token = await _localStorage.GetItemAsync<string>("authToken",cancellationToken);
             (var result, var errorModel, var header) = await CallApi<ProductRequest, BaseResponse<List<ProductResponse>>>
-                .GetAsJsonAndHeaderAsync(request, client.BaseAddress!.ToString(), _options.Products.GetProducts, new() { Client = client }, cancellationToken);
+                .GetAsJsonAndHeaderAsync(request, client.BaseAddress!.ToString(), _options.Products.GetProducts, new() { Client = client, Token = token }, cancellationToken);
 
             if (!errorModel.Succeeded)
             {
@@ -44,7 +47,7 @@ namespace ApplicationClient.Services
             {
                 return await Result<PagingResponse<ProductResponse>>.FailAsync(messages: result.Messages ?? new List<string>());
             }
-            
+
             var pagingResponse = new PagingResponse<ProductResponse>
             {
                 Items = result.Data,
@@ -56,7 +59,7 @@ namespace ApplicationClient.Services
 
         public async Task<IResult<IEnumerable<ProductResponse>>> GetProductsAsync()
         {
-           var http =  _httpClientFactory.CreateClient("ProductsAPI");
+            var http = _httpClientFactory.CreateClient("ProductsAPI");
 
             (var result, var errorModel) = await CallApi<string, BaseResponse<List<ProductResponse>>>
                 .GetAsJsonAsync(null!, http.BaseAddress!.ToString(), _options.Products.Get, new() { Client = http }, default);
