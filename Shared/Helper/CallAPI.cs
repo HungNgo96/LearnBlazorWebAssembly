@@ -59,6 +59,10 @@ namespace Shared.Helper
                 errorModel.Message = ex.Message;
                 return (null, errorModel);
             }
+            finally
+            {
+                option.Client.Dispose();
+            }
         }
 
         public static async Task<(R?, ErrorModel, HttpResponseHeaders?)> GetAsJsonAndHeaderAsync(T value, string uri, string path, HttpOption option, CancellationToken cancellationToken)
@@ -103,6 +107,10 @@ namespace Shared.Helper
             {
                 errorModel.Message = ex.Message;
                 return (null, errorModel, null!);
+            }
+            finally
+            {
+                option.Client.Dispose();
             }
         }
 
@@ -156,6 +164,8 @@ namespace Shared.Helper
             {
                 errorModel.Message = new StringBuilder(errorModel.Message).Append(' ').Append(ex.Message).ToString();
                 return (null, errorModel);
+            }finally {
+                option.Client.Dispose();
             }
         }
 
@@ -195,6 +205,10 @@ namespace Shared.Helper
             {
                 errorModel.Message = new StringBuilder(errorModel.Message).Append(' ').Append(ex.Message).ToString();
                 return (null, errorModel);
+            }
+            finally
+            {
+                option.Client.Dispose();
             }
         }
 
@@ -236,6 +250,10 @@ namespace Shared.Helper
             {
                 errorModel.Message = new StringBuilder(errorModel.Message).Append(" ").Append(ex.Message).ToString();
                 return (null, errorModel);
+            }
+            finally
+            {
+                option.Client.Dispose();
             }
         }
 
@@ -281,6 +299,10 @@ namespace Shared.Helper
             {
                 errorModel.Message = new StringBuilder(errorModel.Message).Append(" ").Append(ex.Message).ToString();
                 return (null, errorModel);
+            }
+            finally
+            {
+                option.Client.Dispose();
             }
         }
 

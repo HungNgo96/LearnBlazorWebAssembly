@@ -1,6 +1,7 @@
 ﻿using Application.Interfaces.Services;
 using Application.Options;
 using Domain.Entity;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -13,10 +14,12 @@ namespace Infrastructure.Services
     public class TokenService : ITokenService
     {
         private readonly JwtOption _options;
-
-        public TokenService(IOptions<JwtOption> options)
+        private readonly UserManager<User> _userManager;
+        public TokenService(IOptions<JwtOption> options,
+                            UserManager<User> userManager)
         {
             _options = options.Value;
+            _userManager = userManager;
         }
 
         public string GenerateRefreshToken()
@@ -43,12 +46,15 @@ namespace Infrastructure.Services
 
         public async Task<List<Claim>> GetClaims(User user)
         {
-            await Task.Delay(1);
             var claims = new List<Claim>
+                {
+                    new Claim(ClaimTypes.Name, user.Email)
+                };
+            var roles = await _userManager.GetRolesAsync(user);
+            foreach (var role in roles)
             {
-                new Claim(ClaimTypes.Name, user.Email)
-            };
-
+                claims.Add(new Claim(ClaimTypes.Role, role));
+            }
             return claims;
         }
 

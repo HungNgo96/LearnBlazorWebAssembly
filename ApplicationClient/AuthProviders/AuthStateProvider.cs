@@ -1,6 +1,7 @@
 ﻿using ApplicationClient.Ultilities;
 using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.Authorization;
+using Newtonsoft.Json.Linq;
 using System.Net.Http.Headers;
 using System.Security.Claims;
 
@@ -27,9 +28,10 @@ namespace ApplicationClient.AuthProviders
             return new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity(JwtParserUtilis.ParseClaimsFromJwt(token), "jwtAuthType")));
         }
 
-        public void NotifyUserAuthentication(string email)
+        public void NotifyUserAuthentication(string token)
         {
-            var authenticatedUser = new ClaimsPrincipal(new ClaimsIdentity(new[] { new Claim(ClaimTypes.Name, email) }, "jwtAuthType"));
+            //var authenticatedUser = new ClaimsPrincipal(new ClaimsIdentity(new[] { new Claim(ClaimTypes.Name, email) }, "jwtAuthType"));//old
+            var authenticatedUser = new ClaimsPrincipal(new ClaimsIdentity(JwtParserUtilis.ParseClaimsFromJwt(token), "jwtAuthType"));
             var authState = Task.FromResult(new AuthenticationState(authenticatedUser));
             NotifyAuthenticationStateChanged(authState);
         }

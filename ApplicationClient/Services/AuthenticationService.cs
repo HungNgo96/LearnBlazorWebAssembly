@@ -55,7 +55,7 @@ namespace ApplicationClient.Services
 
             await _localStorage.SetItemAsync("authToken", result.Data.Token);
             await _localStorage.SetItemAsync("refreshToken", result.Data.RefreshToken);
-            ((AuthStateProvider)_authStateProvider).NotifyUserAuthentication(request.Email);
+            ((AuthStateProvider)_authStateProvider).NotifyUserAuthentication(result.Data.Token);
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", result.Data.Token);
 
             return await Result<AuthResponse>.SuccessAsync(data: result.Data!);

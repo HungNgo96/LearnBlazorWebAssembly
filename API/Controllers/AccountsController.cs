@@ -51,6 +51,8 @@ namespace API.Controllers
                 resultWrap.Data.Errors = errors;
                 return BadRequest(resultWrap);
             }
+
+            await _userManager.AddToRoleAsync(user, "Viewer");
             resultWrap.Succeeded = true;
             resultWrap.Messages = new List<string>() { "Tạo tài khoản thành công" };
 

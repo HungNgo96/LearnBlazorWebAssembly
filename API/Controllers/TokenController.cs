@@ -1,6 +1,5 @@
 ﻿using Application.Interfaces.Services;
 using Application.Options;
-using Application.Ultilities;
 using Domain.Entity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -18,6 +17,7 @@ namespace API.Controllers
         private readonly UserManager<User> _userManager;
         private readonly ITokenService _tokenService;
         private readonly JwtOption _options;
+
         public TokenController(UserManager<User> userManager,
                                ITokenService tokenService,
                                IOptions<JwtOption> options)
@@ -26,13 +26,14 @@ namespace API.Controllers
             _tokenService = tokenService;
             _options = options.Value;
         }
+
         [HttpPost]
         [Route("refresh")]
         public async Task<IActionResult> Refresh([FromBody] RefreshTokenRequest request)
         {
             if (request is null)
             {
-                return BadRequest(await Result<AuthResponse>.FailAsync("Invalid client request",(int) HttpStatusCode.BadRequest));
+                return BadRequest(await Result<AuthResponse>.FailAsync("Invalid client request", (int)HttpStatusCode.BadRequest));
             }
 
             var principal = _tokenService.GetPrincipalFromExpiredToken(request.Token);
@@ -41,7 +42,7 @@ namespace API.Controllers
 
             if (user == null || user.RefreshToken != request.RefreshToken || user.RefreshTokenExpiryTime <= DateTime.Now)
                 return BadRequest(await Result<AuthResponse>.FailAsync("Invalid client request", (int)HttpStatusCode.BadRequest));
-            
+
             var signingCredentials = _tokenService.GetSigningCredentials();
             var claims = await _tokenService.GetClaims(user);
             var tokenOptions = _tokenService.GenerateTokenOptions(signingCredentials, claims);
