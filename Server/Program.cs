@@ -1,9 +1,10 @@
+using System.Collections.Generic;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddControllersWithViews();
-builder.Services.AddRazorPages();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -44,11 +45,25 @@ else
 //    });
 //});
 
-app.UseBlazorFrameworkFiles("/ll");
-app.UseStaticFiles("/ll");
-app.UseRouting();
-app.MapControllers();
-app.MapFallbackToFile("/ll/{*path:nonfile}","ll/index.html");
-app.MapFallbackToFile("/{*path:nonfile}","ll/index.html");
+app.MapWhen(ctx => ctx.Request.Path.StartsWithSegments("/ll"), second =>
+    {
+        //second.Use((ctx, nxt) =>
+        //{
+        //    ctx.Request.Path = "/ll" + ctx.Request.Path;
+        //    return nxt();
+        //});
+
+        second.UseBlazorFrameworkFiles("/ll");
+        second.UseStaticFiles();
+        second.UseStaticFiles("/ll");
+        second.UseRouting();
+
+        second.UseEndpoints(endpoints =>
+        {
+            endpoints.MapControllers();
+            endpoints.MapFallbackToFile("/ll/{*path:nonfile}",
+                "ll/index.html");
+        });
+    });
 
 await app.RunAsync();

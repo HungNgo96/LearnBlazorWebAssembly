@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 
-namespace BlazorWebApp.Pages
+namespace DemoIdentityServer4.Pages
 {
     public partial class CallJavaScriptInDotNet
     {
@@ -26,7 +26,7 @@ namespace BlazorWebApp.Pages
             if (firstRender)
             {
                 Console.WriteLine("OnAfterRenderAsync firstRender");
-                _jsModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./scripts/jsExamples.js");
+                _jsModule = await JSRuntime.InvokeAsync<IJSObjectReference>();
             }
         }
     }
