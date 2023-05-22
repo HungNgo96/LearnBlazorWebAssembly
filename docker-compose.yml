@@ -1,0 +1,13 @@
+version: '3.4'
+
+services:
+  blazorweb:
+    image: ${DOCKER_REGISTRY-}blazor-wsam
+    build:
+      context: .
+      dockerfile: BlazorWebApp/Dockerfile
+    environment:
+        - ASPNETCORE_URLS=http://*:5005
+        - ASPNETCORE_ENVIRONMENT=STAGING
+    ports:
+        - "8080:80"
