@@ -26,7 +26,7 @@ namespace DemoIdentityServer4.Pages
             if (firstRender)
             {
                 Console.WriteLine("OnAfterRenderAsync firstRender");
-                _jsModule = await JSRuntime.InvokeAsync<IJSObjectReference>();
+                //_jsModule = await JSRuntime.InvokeAsync<IJSObjectReference>();
             }
         }
     }
