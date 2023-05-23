@@ -15,4 +15,8 @@
     <Folder Include="Model\Products\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Servers\Domain\Domain.csproj" />
+  </ItemGroup>
+
 </Project>

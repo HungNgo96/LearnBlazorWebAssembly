@@ -6,5 +6,10 @@ namespace BlazorMaterialMud.Client.Shared
     {
         [Parameter]
         public bool SideBarOpen { get; set; }
+        private static void OnMouseLeaveNav(bool isChange)
+        {
+          
+            Console.WriteLine("NavMenu::OnMouseLeaveNav:" + isChange); 
+        }
     }
 }

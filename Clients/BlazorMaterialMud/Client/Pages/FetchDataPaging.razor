@@ -1,0 +1,38 @@
+﻿@page "/fetchdatapaging"
+@using ApplicationClient.Services;
+@using ApplicationClient.Responses;
+
+<MudTable ServerData="@(new Func<TableState, Task<TableData<ProductResponse>>>(GetServerData))"
+          Hover="true" Breakpoint="Breakpoint.Sm" @ref="_table" RowsPerPage="4">
+
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Products</MudText>
+        <MudSpacer />
+        <MudTextField T="string" ValueChanged="@(searchTerm => OnSearch(searchTerm))" Placeholder="Search"
+                      Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search"
+                      IconSize="Size.Medium" Class="mt-0" DebounceInterval="500"></MudTextField>
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh>Image</MudTh>
+        <MudTh><MudTableSortLabel SortLabel="name" T="ProductResponse">Name</MudTableSortLabel></MudTh>
+        <MudTh>Supplier</MudTh>
+        <MudTh><MudTableSortLabel SortLabel="price" T="ProductResponse">Price</MudTableSortLabel></MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Image">
+            <MudLink Href="@($"product/{context.Id}")">
+                <MudAvatar Color="Color.Transparent" Size="Size.Large">
+                    <MudImage Src="@context.ImageUrl"></MudImage>
+                </MudAvatar>
+            </MudLink>
+        </MudTd>
+        <MudTd DataLabel="Name">
+            <MudLink Href="@($"product/{context.Id}")">@context.Name</MudLink>
+            </MudTd>
+        <MudTd DataLabel="Supplier">@context.Supplier</MudTd>
+        <MudTd DataLabel="Price">$@context.Price</MudTd>
+    </RowTemplate>
+    <PagerContent>
+        <MudTablePager PageSizeOptions="@_pageSizeOption" RowsPerPageString="Products per page" />
+    </PagerContent>
+</MudTable>

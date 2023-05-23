@@ -24,7 +24,11 @@ namespace Infrastructure.Repositories
 
         public async Task<Product> GetProductByIdAsync(Guid id, CancellationToken cancellationToken)
         {
-            return await _context.Products.FirstOrDefaultAsync(p => p.Id.Equals(id), cancellationToken);
+            return await _context.Products
+            .Include(r => r.Reviews)
+            .Include(q => q.QAs)
+            .Include(d => d.Declaration)
+            .SingleOrDefaultAsync(p => p.Id.Equals(id), cancellationToken);
         }
 
         public async Task<IEnumerable<Product>> GetProducts() => await _context.Products.ToListAsync();

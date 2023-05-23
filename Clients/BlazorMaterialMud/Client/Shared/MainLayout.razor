@@ -1,10 +1,26 @@
 ﻿@inherits LayoutComponentBase
 
 <MudLayout>
-    <AppBar OnSidebarToggled="ToggleSidebar" OnThemeToggled="ToggleTheme" />
+   <AppBar OnSidebarToggled="ToggleSidebar" OnThemeToggled="ToggleTheme" />
 
-    <NavMenu SideBarOpen="_sidebarOpen" />
-
+    @*<NavMenu SideBarOpen="_sidebarOpen" />*@
+    <MudDrawer @bind-Open="_sidebarOpen" Elevation="1">
+        <MudDrawerHeader>
+            <MudAvatar Color="Color.Transparent" Size="Size.Large">
+                <MudImage Src="assets/Logo-CodeMaze.png"></MudImage>
+            </MudAvatar>
+            <MudText Typo="Typo.h5" Color="Color.Primary" Style="margin-top:10px; margin-left:15px;">Code-Maze</MudText>
+        </MudDrawerHeader>
+        <MudNavMenu>
+            <MudNavLink Href="" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Home">Home</MudNavLink>
+            <MudNavLink Href="fetchdata" Icon="@Icons.Material.Filled.Storage">FetchData</MudNavLink>
+            <MudNavLink Href="fetchdatapaging" Icon="@Icons.Material.Filled.Storage">FetchDataPaging</MudNavLink>
+            <MudNavGroup Title="Expanding" Icon="@Icons.Material.Filled.DashboardCustomize" Expanded="true">
+                <MudNavLink Href="#" Icon="@Icons.Material.Filled.Camera">Photos</MudNavLink>
+                <MudNavLink Href="#" Icon="@Icons.Material.Filled.Celebration">Party</MudNavLink>
+            </MudNavGroup>
+        </MudNavMenu>
+    </MudDrawer>
     <MudMainContent Class="pt-16 px-16">
         <MudContainer Class="mt-6">
             @Body

@@ -11,6 +11,10 @@ namespace BlazorMaterialMud.Client.Shared
 
         private void ToggleTheme(MudTheme changedTheme) => _currentTheme = changedTheme;
 
-        private void ToggleSidebar() => _sidebarOpen = !_sidebarOpen;
+        private void ToggleSidebar() {
+            
+            _sidebarOpen = !_sidebarOpen;
+            Console.WriteLine("MainLayout::ToggleSideBar" + _sidebarOpen);
+        } 
     }
 }

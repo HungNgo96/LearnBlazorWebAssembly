@@ -32,7 +32,6 @@ namespace BlazorMaterialMud.Client.Pages
             if (pagingResponse.Succeeded)
             {
                 Products = pagingResponse.Data.ToList();
-          
             }
         }
     }

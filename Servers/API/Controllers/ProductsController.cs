@@ -9,7 +9,9 @@ using System.Net.Http.Headers;
 namespace API.Controllers
 {
     [Route("api/[controller]/[action]")]
-    [ApiController, Authorize]
+    [ApiController]
+    //[Authorize]
+    [AllowAnonymous]
     public class ProductsController : ControllerBase
     {
         private readonly LazyInstanceUtils<IProductService> _productService;
@@ -19,7 +21,7 @@ namespace API.Controllers
             _productService = new LazyInstanceUtils<IProductService>(serviceProvider);
         }
 
-        [HttpGet, AllowAnonymous]
+        [HttpGet]
         public async Task<IActionResult> Get()
         {
             var products = await _productService.Value.GetProducts();

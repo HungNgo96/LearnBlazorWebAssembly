@@ -14,6 +14,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Domain.Entity;
+using Microsoft.AspNetCore.Mvc;
 
 IConfiguration config = new ConfigurationBuilder()
     .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
@@ -25,6 +26,12 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 var services = builder.Services;
+
+services.AddControllers()
+    .AddNewtonsoftJson(options =>
+    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+);
+
 services.AddCors(policy =>
 {
     policy.AddPolicy("CorsPolicy", opt => opt
@@ -62,7 +69,7 @@ services.AddEndpointsApiExplorer();
 services.AddSwaggerGen();
 _ = builder.Services.Configure<ConnectionStringOptions>(builder.Configuration.GetRequiredSection("ConnectionStrings"));
 _ = builder.Services.Configure<JwtOption>(builder.Configuration.GetRequiredSection("JWTSettings"));
-services.AddControllers();
+
 
 services.AddDbContext<BlazorWebContext>(op =>
 {

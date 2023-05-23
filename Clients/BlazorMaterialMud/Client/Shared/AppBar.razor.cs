@@ -22,6 +22,12 @@ namespace BlazorMaterialMud.Client.Shared
             await OnThemeToggled.InvokeAsync(_currentTheme);
         }
 
+        private async Task ToggleSideBar()
+        {
+            Console.WriteLine("AppBar::ToggleSideBar");
+            await OnSidebarToggled.InvokeAsync();
+        }
+
         private MudTheme GenerateDarkTheme() =>
             new MudTheme
             {
