@@ -1,7 +1,11 @@
 ﻿@page "/fetchdatapaging"
 @using ApplicationClient.Services;
 @using ApplicationClient.Responses;
-
+<MudTooltip Text="Create Product" Class="mb-3">
+    <MudLink Href="createProduct">
+        <MudFab StartIcon="@Icons.Material.Filled.Add" Color="Color.Secondary" Size="Size.Large" />
+    </MudLink>
+</MudTooltip>
 <MudTable ServerData="@(new Func<TableState, Task<TableData<ProductResponse>>>(GetServerData))"
           Hover="true" Breakpoint="Breakpoint.Sm" @ref="_table" RowsPerPage="4">
 

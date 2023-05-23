@@ -46,7 +46,7 @@ else
 //});
 app.MapGet("/", context =>
 {
-    context.Response.Redirect("/ll");
+    context.Response.Redirect("/mud");
     return Task.FromResult(0);
 });
 

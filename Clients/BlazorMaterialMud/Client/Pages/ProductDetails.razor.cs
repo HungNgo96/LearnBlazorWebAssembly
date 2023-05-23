@@ -11,7 +11,12 @@ namespace BlazorMaterialMud.Client.Pages
         private CancellationTokenSource cts = new CancellationTokenSource();
         [Inject]
         private IProductService ProductService { get; set; }
-        public ProductResponse ProductDetail { get; set; } = new ProductResponse();
+        public ProductResponse ProductDetail { get; set; } = new ProductResponse
+        {
+            Reviews = new List<Review>(),
+            Declaration = new Declaration(),
+            QAs = new List<QA>()
+        };
         [Parameter]
         public Guid ProductId { get; set; }
 
@@ -36,13 +41,6 @@ namespace BlazorMaterialMud.Client.Pages
         }
         private void RatingValueChanged(int value) =>
             Console.WriteLine($"The product is rated with {value} thumbs.");
-
-        public ProductResponse Product { get; set; } = new ProductResponse
-        {
-            Reviews = new List<Review>(),
-            Declaration = new Declaration(),
-            QAs = new List<QA>()
-        };
 
         public void Dispose()
         {
