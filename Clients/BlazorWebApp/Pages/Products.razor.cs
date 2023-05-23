@@ -2,8 +2,6 @@
 using ApplicationClient.Responses;
 using ApplicationClient.Services;
 using Microsoft.AspNetCore.Components;
-using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using Shared.Model.Paging;
 using Shared.Requests.Products;
 
@@ -23,7 +21,6 @@ public sealed partial class Products : IDisposable
     public ILogger<Products> Logger { get; set; }
     private bool IsError = false;
     private ProductRequest _productRequest = new ProductRequest();
-    private CancellationTokenSource _cts = new();
     public void Dispose()
     {
         cts.Cancel();
@@ -59,7 +56,7 @@ public sealed partial class Products : IDisposable
 
     private async Task GetProductsAsync()
     {
-        var pagingResponse = await ProductService.GetProductsAsync(_productRequest, _cts.Token);
+        var pagingResponse = await ProductService.GetProductsAsync(_productRequest, cts.Token);
         if (pagingResponse.Succeeded)
         {
             ProductList = pagingResponse.Data.Items;

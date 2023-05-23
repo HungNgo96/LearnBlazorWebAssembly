@@ -19,7 +19,7 @@ namespace API.Controllers
             _productService = new LazyInstanceUtils<IProductService>(serviceProvider);
         }
 
-        [HttpGet]
+        [HttpGet, AllowAnonymous]
         public async Task<IActionResult> Get()
         {
             var products = await _productService.Value.GetProducts();

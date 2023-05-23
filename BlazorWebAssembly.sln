@@ -34,11 +34,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{BD44D0C4-1204-42E6-81BC-F696714E0277}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JSInteropExamples.OnlineStatusIndicator", "Clients\JSInteropExamples.OnlineStatusIndicator\JSInteropExamples.OnlineStatusIndicator.csproj", "{B0800BA6-2485-4105-9CB7-FFECAA70701C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JSInteropExamples.OnlineStatusIndicator", "Clients\JSInteropExamples.OnlineStatusIndicator\JSInteropExamples.OnlineStatusIndicator.csproj", "{B0800BA6-2485-4105-9CB7-FFECAA70701C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorWasm.Toastr", "Clients\BlazorWasm.Toastr\BlazorWasm.Toastr.csproj", "{4D3E0C83-39E3-4F48-B07B-30CF9158B215}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorWasm.Toastr", "Clients\BlazorWasm.Toastr\BlazorWasm.Toastr.csproj", "{4D3E0C83-39E3-4F48-B07B-30CF9158B215}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorMaterialMud.Client", "Clients\BlazorMaterialMud\Client\BlazorMaterialMud.Client.csproj", "{5DDA9323-0CDB-48E1-A4B6-6AEBCCF0D4D9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorMaterialMud.Client", "Clients\BlazorMaterialMud\Client\BlazorMaterialMud.Client.csproj", "{5DDA9323-0CDB-48E1-A4B6-6AEBCCF0D4D9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
