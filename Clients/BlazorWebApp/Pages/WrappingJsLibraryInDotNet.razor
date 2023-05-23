@@ -1,0 +1,16 @@
+﻿@page "/wrappjsindotnet"
+
+<h3>WrappingJsLibraryInDotNet</h3>
+<div class="row">
+    <div class="col-md-4">
+        <h4>
+            Calling Toastr function
+        </h4>
+    </div>
+    <div class="col-md-12 mb-3 border-1 border border-primary p-3 rounded-1">
+        <button type="button" class="btn btn-info" @onclick="ShowToastrInfo">Show Toastr Info</button>
+    </div>
+    <div class="col-md-12 mb-3 border-1 border border-primary p-3 rounded-1">
+        <button type="button" class="btn btn-info" @onclick='() => ShowToastrInfo("toast option", _toastOption)'>Show Toastr Info with Options</button>
+    </div>
+</div>
