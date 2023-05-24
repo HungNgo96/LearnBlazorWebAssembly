@@ -16,5 +16,6 @@ namespace ApplicationClient.Interfaces
         Task<IResult<ProductResponse>> GetProductByIdAsync(string id, CancellationToken cancellationToken);
         Task<IResult<int>> DeleteProductAsync(Guid id, CancellationToken cancellationToken);
         Task<IResult<int>> UpdateProductAsync(UpdateProductRequest request, CancellationToken cancellationToken);
+        Task<IResult<string>> CallChartEndpoint(CancellationToken cancellationToken);
     }
 }

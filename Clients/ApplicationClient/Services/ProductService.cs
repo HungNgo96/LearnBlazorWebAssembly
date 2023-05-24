@@ -175,5 +175,26 @@ namespace ApplicationClient.Services
 
             return await Result<int>.SuccessAsync(data: (int)result.Data!);
         }
+
+        public async Task<IResult<string>> CallChartEndpoint(CancellationToken cancellationToken)
+        {
+            var http = _httpClientFactory.CreateClient("ProductsAPI");
+
+            (var result, var errorModel) = await CallApi<string, BaseResponse<string>>
+                .GetAsJsonAsync(null!, string.Empty, _options.Charts.GetChartData, new() { Client = http }, cancellationToken);
+
+            if (!errorModel.Succeeded)
+            {
+                return await Result<string>.FailAsync(message: errorModel.Message ?? string.Empty);
+            }
+
+            if (!result!.Succeeded)
+            {
+                return await Result<string>.FailAsync(messages: result.Messages ?? new List<string>());
+            }
+
+            return await Result<string>.SuccessAsync(data: result.Data);
+        }
+
     }
 }

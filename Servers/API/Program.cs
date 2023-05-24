@@ -15,6 +15,8 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Domain.Entity;
 using Microsoft.AspNetCore.Mvc;
+using Application.HubConfig;
+using Application.ChartDataProvider;
 
 IConfiguration config = new ConfigurationBuilder()
     .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
@@ -35,11 +37,14 @@ services.AddControllers()
 services.AddCors(policy =>
 {
     policy.AddPolicy("CorsPolicy", opt => opt
-        .AllowAnyOrigin()
+        .WithOrigins("http://localhost:5066")
+        //.AllowAnyOrigin() //AllAny or WithOrigins only one
         .AllowAnyHeader()
         .AllowAnyMethod()
+        .AllowCredentials()//with  WithOrigins
     .WithExposedHeaders("X-Pagination"));
 });
+services.AddSignalR();
 
 //authentication
 services.AddIdentity<User, IdentityRole>()
@@ -67,8 +72,8 @@ builder.Services.AddAuthentication(opt =>
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 services.AddEndpointsApiExplorer();
 services.AddSwaggerGen();
-_ = builder.Services.Configure<ConnectionStringOptions>(builder.Configuration.GetRequiredSection("ConnectionStrings"));
-_ = builder.Services.Configure<JwtOption>(builder.Configuration.GetRequiredSection("JWTSettings"));
+_ = services.Configure<ConnectionStringOptions>(builder.Configuration.GetRequiredSection("ConnectionStrings"));
+_ = services.Configure<JwtOption>(builder.Configuration.GetRequiredSection("JWTSettings"));
 
 
 services.AddDbContext<BlazorWebContext>(op =>
@@ -81,7 +86,8 @@ services.AddApplicationLayer();
 services.AddScoped(typeof(Lazy<>), typeof(LazyInstanceUtils<>));
 services.AddScoped<IProductRepository, ProductRepository>();
 services.AddScoped<IProductService, ProductService>();
-builder.Services.AddScoped<ITokenService, TokenService>();
+services.AddScoped<ITokenService, TokenService>();
+services.AddSingleton<TimerManager>();//real time chat hub
 
 var app = builder.Build();
 
@@ -105,5 +111,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapHub<ChartHub>("/chart");
 
 app.Run();

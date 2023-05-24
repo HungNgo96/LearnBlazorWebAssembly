@@ -6,5 +6,6 @@
         public ProductOption Products { get; set; } = new ProductOption();
         public AccountOption Accounts { get; set; } = new AccountOption();
         public TokenOption Token { get; set; } = new TokenOption();
+        public ChartOption Charts { get; set; } = new ChartOption();
     }
 }

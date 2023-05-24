@@ -13,6 +13,7 @@
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.17.2" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\BlazorMaterialMud\BlazorMaterialMud.Client.csproj" />
     <ProjectReference Include="..\BlazorWebApp\BlazorWebApp.csproj" />
   </ItemGroup>
 </Project>
