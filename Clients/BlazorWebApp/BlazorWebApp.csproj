@@ -25,7 +25,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ApplicationClient\ApplicationClient.csproj" />
-    <ProjectReference Include="..\BlazorMaterialMud\Client\BlazorMaterialMud.Client.csproj" />
     <ProjectReference Include="..\BlazorWasm.Toastr\BlazorWasm.Toastr.csproj" />
     <ProjectReference Include="..\JSInteropExamples.OnlineStatusIndicator\JSInteropExamples.OnlineStatusIndicator.csproj" />
   </ItemGroup>

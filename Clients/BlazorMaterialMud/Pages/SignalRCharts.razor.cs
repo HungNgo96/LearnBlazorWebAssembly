@@ -3,8 +3,6 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.SignalR.Client;
 using Newtonsoft.Json;
 using Shared.Model.Charts;
-using System;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace BlazorMaterialMud.Client.Pages
 {

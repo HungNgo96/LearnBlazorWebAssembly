@@ -41,6 +41,15 @@ namespace API.Controllers
             return Ok(products);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetProductsVirtualAsync([FromQuery] ProductVirtualRequest request, CancellationToken cancellationToken)
+        {
+            var products = await _productService.Value.GetProductsVirtualAsync(request, cancellationToken);
+
+            return Ok(products);
+        }
+
+
         [HttpPost]
         public async Task<IActionResult> CreateProductAsync(CreateProductRequest request, CancellationToken cancellationToken)
         {
@@ -64,7 +73,7 @@ namespace API.Controllers
                     var dbPath = Path.Combine(folderName, fileName);
                     using (var stream = new FileStream(fullPath, FileMode.Create))
                     {
-                        _ = file.CopyToAsync(stream);
+                        await file.CopyToAsync(stream);
                     }
                     return Ok(dbPath);
                 }

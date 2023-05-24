@@ -10,9 +10,10 @@ using Shared.Helper;
 using Shared.Model.Http;
 using Shared.Model.Paging;
 using Shared.Requests.Products;
+using Shared.Responses;
 using Shared.Wrapper;
 using System.Text.Json;
-
+using ProductResponse = ApplicationClient.Responses.ProductResponse;
 namespace ApplicationClient.Services
 {
     public class ProductService : IProductService
@@ -21,6 +22,7 @@ namespace ApplicationClient.Services
         private readonly JsonSerializerOptions _jsonOptions;
         private readonly UrlOption _options;
         private readonly ILocalStorageService _localStorage;
+
         public ProductService(IHttpClientFactory httpClientFactory, IOptions<UrlOption> options, ILocalStorageService localStorageService)
         {
             _httpClientFactory = httpClientFactory;
@@ -31,10 +33,9 @@ namespace ApplicationClient.Services
 
         public async Task<IResult<PagingResponse<ProductResponse>>> GetProductsAsync(ProductRequest request, CancellationToken cancellationToken)
         {
-
             Console.WriteLine("GetProductsAsync::" + JsonConvert.SerializeObject(request));
             var client = _httpClientFactory.CreateClient("ProductsAPI");
-            string token = await _localStorage.GetItemAsync<string>("authToken",cancellationToken);
+            string token = await _localStorage.GetItemAsync<string>("authToken", cancellationToken);
             (var result, var errorModel, var header) = await CallApi<ProductRequest, BaseResponse<List<ProductResponse>>>
                 .GetAsJsonAndHeaderAsync(request, client.BaseAddress!.ToString(), _options.Products.GetProducts, new() { Client = client, Token = token }, cancellationToken);
 
@@ -196,5 +197,25 @@ namespace ApplicationClient.Services
             return await Result<string>.SuccessAsync(data: result.Data);
         }
 
+        public async Task<IResult<VirtualizeResponse<ProductVirtualResponse>>> GetProductsVirtualAsync(ProductVirtualRequest request, CancellationToken cancellationToken)
+        {
+            Console.WriteLine("GetProductsVirtualAsync::" + JsonConvert.SerializeObject(request));
+            var client = _httpClientFactory.CreateClient("ProductsAPI");
+            string token = await _localStorage.GetItemAsync<string>("authToken", cancellationToken);
+            (var result, var errorModel) = await CallApi<ProductVirtualRequest, BaseResponse<VirtualizeResponse<ProductVirtualResponse>>>
+                .GetAsJsonAsync(request, client.BaseAddress!.ToString(), _options.Products.GetProductsVirtual, new() { Client = client, Token = token }, cancellationToken);
+
+            if (!errorModel.Succeeded)
+            {
+                return await Result<VirtualizeResponse<ProductVirtualResponse>>.FailAsync(message: errorModel.Message ?? string.Empty);
+            }
+
+            if (!result!.Succeeded)
+            {
+                return await Result<VirtualizeResponse<ProductVirtualResponse>>.FailAsync(messages: result.Messages ?? new List<string>());
+            }
+
+            return await Result<VirtualizeResponse<ProductVirtualResponse>>.SuccessAsync(data: result.Data, messages: result.Messages);
+        }
     }
 }

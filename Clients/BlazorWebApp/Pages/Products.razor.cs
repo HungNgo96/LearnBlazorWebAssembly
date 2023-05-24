@@ -29,7 +29,7 @@ public sealed partial class Products : IDisposable
     }
     protected override async Task OnInitializedAsync()
     {
-        Interceptor.RegisterEvent();
+        Interceptor.RegisterEvent();//refresh token
         Logger.LogInformation("1. OnInitializedAsync Products");
         await GetProductsAsync();
     }

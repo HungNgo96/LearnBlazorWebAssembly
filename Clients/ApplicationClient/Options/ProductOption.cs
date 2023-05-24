@@ -9,5 +9,6 @@
         public string GetProductById { get; set; }
         public string UpdateProduct { get; set; }
         public string DeleteProduct { get; set; }
+        public string GetProductsVirtual { get; set; }
     }
 }

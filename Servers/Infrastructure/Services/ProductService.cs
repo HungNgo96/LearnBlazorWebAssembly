@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Shared.Extensions;
 using Shared.Requests.Products;
+using Shared.Responses;
 using Shared.Responses.Products;
 using Shared.Wrapper;
 
@@ -105,5 +106,23 @@ namespace Infrastructure.Services
                 ? await Result<int>.SuccessAsync(data: result, message: message)
                 : await Result<int>.FailAsync(message: message);
         }
+        public async Task<IResult<VirtualizeResponse<ProductVirtualResponse>>> GetProductsVirtualAsync(ProductVirtualRequest request, CancellationToken cancellationToken)
+        {
+            _logger.Request(nameof(ProductService), nameof(GetProductsVirtualAsync), requestName: nameof(ProductVirtualRequest), JsonConvert.SerializeObject(request));
+
+            (var products, var total) = await _productRepository.Value.GetProductsVirtualAsync(request, cancellationToken);
+
+            _logger.Response(nameof(ProductService), nameof(GetProductsVirtualAsync));
+            var productRes = _mapper.Value.Map<List<ProductVirtualResponse>>(products);
+
+            return products != null
+                ? await Result<VirtualizeResponse<ProductVirtualResponse>>.SuccessAsync(data: new()
+                {
+                    Items = productRes,
+                    TotalSize = total
+                }, message: " Thành công.")
+                : await Result<VirtualizeResponse<ProductVirtualResponse>>.FailAsync(message: " Thất bại.");
+        }
+
     }
 }

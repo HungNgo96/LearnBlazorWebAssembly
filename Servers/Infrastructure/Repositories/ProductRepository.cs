@@ -81,5 +81,17 @@ namespace Infrastructure.Repositories
                 ? (isDelete, "Xoá thành công.")
                 : (isDelete, "Xoá thất bại.");
         }
+
+        public async Task<(IList<ProductVirtual>, int)> GetProductsVirtualAsync(ProductVirtualRequest request, CancellationToken cancellationToken)
+        {
+            var total = await _context.ProductVirtuals.CountAsync();
+            var products = await _context.ProductVirtuals
+                 .OrderBy(p => p.ItemNumber)
+                .Skip(request.StartIndex)
+                .Take(request.PageSize)
+                .ToListAsync();
+
+            return (products, total);
+        }
     }
 }

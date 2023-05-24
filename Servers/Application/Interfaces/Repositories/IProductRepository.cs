@@ -1,5 +1,6 @@
 ﻿using Domain.Entity;
 using Shared.Requests.Products;
+using Shared.Responses.Products;
 using Shared.Wrapper;
 
 namespace Application.Interfaces.Repositories
@@ -12,5 +13,6 @@ namespace Application.Interfaces.Repositories
         Task<Product> GetProductByIdAsync(Guid id, CancellationToken cancellationToken);
         Task<(int, string)> UpdateProductAsync(Product request, CancellationToken cancellationToken);
         Task<(int, string)> DeleteProductAsync(Guid id, CancellationToken cancellationToken);
+        Task<(IList<ProductVirtual>, int)> GetProductsVirtualAsync(ProductVirtualRequest request, CancellationToken cancellationToken);
     }
 }

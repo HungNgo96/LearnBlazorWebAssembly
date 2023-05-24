@@ -12,6 +12,7 @@ namespace Infrastructure.DbContexts
          : base(options) { }
 
         public DbSet<Product> Products { get; set; }
+        public DbSet<ProductVirtual> ProductVirtuals { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
