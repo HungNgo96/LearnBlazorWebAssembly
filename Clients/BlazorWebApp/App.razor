@@ -38,10 +38,11 @@
     private List<Assembly> _lazyLoadedAssemblies = new List<Assembly>();
     private async Task OnNavigateAsync(NavigationContext context)
     {
-        if (context.Path == "fetchdata")
+        if (context.Path == "lazyLoading")
         {
-            //var assemblies = await AssemblyLoader.LoadAssembliesAsync(new[] { "Weather.dll" });
-            var assemblies = await AssemblyLoader.LoadAssembliesAsync(new[] { "" });
+            //Weather.dll file lazy
+            var assemblies = await AssemblyLoader.LoadAssembliesAsync(new[] { "Weather.dll" });
+
             _lazyLoadedAssemblies.AddRange(assemblies);
         }
     }

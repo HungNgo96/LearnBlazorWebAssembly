@@ -19,7 +19,6 @@ namespace BlazorWebApp.Pages
         public HttpInterceptorService Interceptor { get; set; }
         [Inject]
         public ILogger<Products> Logger { get; set; }
-        private ProductVirtualRequest _productRequest = new ProductVirtualRequest();
         public void Dispose()
         {
             cts.Cancel();
